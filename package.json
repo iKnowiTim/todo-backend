@@ -8,10 +8,14 @@
   "scripts": {
     "build": "tsc",
     "start": "yarn build && node dist/main.js",
-    "dev": "nodemon src/main.ts"
+    "dev": "nodemon src/main.ts",
+    "lint": "eslint"
   },
   "devDependencies": {
     "@types/node": "^16.18.1",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
+    "eslint": "^8.30.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.1",
     "ts-node": "^10.9.1",
