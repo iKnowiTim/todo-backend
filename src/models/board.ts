@@ -2,7 +2,7 @@ import { List } from './list'
 
 export interface Board {
   id: number
-  description?: string
+  description: string
   title: string
   lists: List[]
   createdAt: Date

@@ -1,10 +1,10 @@
-import { Tag } from './tag'
-
 export interface Task {
   id: number
   title: string
-  description?: string
-  tags?: Tag[]
+  description: string
+  tags: {
+    description: string[]
+  }
   completed: boolean
   createdAt: Date
   updatedAt: Date
