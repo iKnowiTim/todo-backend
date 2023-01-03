@@ -69,7 +69,7 @@ interface User {
 ```
 interface Board {
 id: number,
-description?: string,
+description: string,
 title: string,
 lists: List[],
 createdAt: Date,
@@ -83,7 +83,7 @@ deletedAt: Date,
 interface List {
 id: number,
 title: string,
-description?: string,
+description: string,
 tasks: Task[],
 createdAt: Date,
 updatedAt: Date,
@@ -96,20 +96,16 @@ deletedAt: Date
 interface Task {
 id: number,
 title: string,
-description?: string,
-tags?: Tag[],
+description: string,
 completed: boolean,
 createdAt: Date,
 updatedAt: Date,
-deletedAt: Date
+deletedAt: Date,
+tags: {
+  description: string[]
+}
 }
 
-```
-
-```
-interface Tag {
-  description?: string
-}
 ```
 
 # description_request_methods
