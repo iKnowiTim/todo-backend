@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { HttpException } from '../common/httpException'
 import { CreateBoardRequestDto } from '../dto/boardsDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import { createBoardSchema, updateBoardSchema } from '../Schemes/BoardSchemes'
@@ -12,73 +13,78 @@ import {
 
 export const boardsRouter = Router()
 
-boardsRouter.get('/boards', (req, res) => {
-  res.status(200)
-  res.send(getBoards())
+boardsRouter.get('/boards', (req, res, next) => {
+  try {
+    const response = getBoards()
+
+    res.status(200).send(response)
+  } catch (error) {
+    next(error)
+  }
 })
 
-boardsRouter.get('/boards/:id', (req, res) => {
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    res.status(400)
-    res.send('So stupid, check your request')
-    return
-  }
+boardsRouter.get('/boards/:id', (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id)
 
-  const board = getBoard(id)
-  if (typeof board === 'string') {
-    res.status(404)
-    res.send(board)
-    return
-  }
+    if (isNaN(id)) {
+      throw new HttpException(400, 'Bad request')
+    }
 
-  res.send(board)
+    const board = getBoard(id)
+
+    res.status(200).send(board)
+  } catch (error) {
+    next(error)
+  }
 })
 
 boardsRouter.post(
   '/boards',
   validationMiddleware(createBoardSchema),
-  (req, res) => {
-    const newBoard: CreateBoardRequestDto = req.body
+  (req, res, next) => {
+    try {
+      const newBoard: CreateBoardRequestDto = req.body
 
-    const created = createBoard(newBoard)
-    res.status(201)
-    res.send(created)
+      const created = createBoard(newBoard)
+      res.status(201)
+      res.send(created)
+    } catch (error) {
+      next(error)
+    }
   }
 )
 
-boardsRouter.delete('/boards/:id', (req, res) => {
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    res.status(400)
-    res.send()
-    return
-  }
+boardsRouter.delete('/boards/:id', (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id)
+    if (isNaN(id)) {
+      throw new HttpException(400, 'Bad request')
+    }
 
-  deleteBoard(id)
-  res.status(200)
-  res.send()
+    deleteBoard(id)
+    res.status(200).send()
+  } catch (error) {
+    next(error)
+  }
 })
 
 boardsRouter.patch(
   '/boards/:id',
   validationMiddleware(updateBoardSchema),
-  (req, res) => {
-    const id = parseInt(req.params.id)
-    if (isNaN(id) || !req.body) {
-      res.status(400)
-      res.send('So stupid, check your request')
-      return
-    }
-
+  (req, res, next) => {
     try {
+      const id = parseInt(req.params.id)
+      if (isNaN(id)) {
+        throw new HttpException(400, 'Bad request')
+      }
+
       const updated = updateBoard(id, req.body)
 
       res.status(200)
       res.send(updated)
-    } catch (err) {
-      res.status(404).send('not found')
-      return
+    } catch (error) {
+      next(error)
     }
   }
 )
