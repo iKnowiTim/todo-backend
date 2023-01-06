@@ -160,7 +160,7 @@ GET /boards/${id}
 ```
 
 ```
-POST /boards/${id}
+POST /boards
 {
   title: string,
   description?: string
