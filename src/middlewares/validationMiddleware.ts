@@ -8,7 +8,7 @@ export const validationMiddleware = (schema: Schema) => {
 
     if (error) {
       res.status(400).send(error.details)
-      logger.error(`Bad request`)
+      logger.error('Bad request')
       return
     }
 
