@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { HttpException } from '../common/httpException'
+import { logger } from '../common/logger'
 import { CreateBoardRequestDto } from '../dto/boardsDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import { createBoardSchema, updateBoardSchema } from '../Schemes/BoardSchemes'
@@ -28,6 +29,7 @@ boardsRouter.get('/boards/:id', (req, res, next) => {
     const id = parseInt(req.params.id)
 
     if (isNaN(id)) {
+      logger.error('id is not valid')
       throw new HttpException(400, 'Bad request')
     }
 
@@ -59,6 +61,7 @@ boardsRouter.delete('/boards/:id', (req, res, next) => {
   try {
     const id = parseInt(req.params.id)
     if (isNaN(id)) {
+      logger.error('id is not valid')
       throw new HttpException(400, 'Bad request')
     }
 
@@ -76,6 +79,7 @@ boardsRouter.patch(
     try {
       const id = parseInt(req.params.id)
       if (isNaN(id)) {
+        logger.error('id is not valid')
         throw new HttpException(400, 'Bad request')
       }
 

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { HttpException } from '../common/httpException'
+import { logger } from '../common/logger'
 
 export const errorMiddleware = (
   err: HttpException,
@@ -8,6 +9,7 @@ export const errorMiddleware = (
   next: NextFunction
 ) => {
   if (!(err instanceof HttpException)) {
+    logger.error(`Server error.`)
     err = new HttpException(500, 'Server error')
   }
 

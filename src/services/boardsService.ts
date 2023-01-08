@@ -9,6 +9,7 @@ import {
 } from '../dto/boardsDto'
 import * as boardsRepository from '../repositories/boardsRepository'
 import { HttpException } from '../common/httpException'
+import { logger } from '../common/logger'
 
 export function getBoards(): GetBoardsWithCountsResponseDto[] {
   const boards = boardsRepository.getBoards()
@@ -32,6 +33,7 @@ export function getBoard(id: number): GetBoardResponseDto {
   const board = boardsRepository.getBoard(id)
 
   if (!board) {
+    logger.error('board is not found')
     throw new HttpException(404, 'Not found')
   }
 
@@ -98,6 +100,7 @@ export function updateBoard(
   })
 
   if (!updated) {
+    logger.error('board not update, not found')
     throw new HttpException(404, 'Not found')
   }
 
