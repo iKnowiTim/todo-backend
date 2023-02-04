@@ -3,7 +3,7 @@ import { logger } from '../common/logger'
 
 const stream: StreamOptions = {
   write: (message) => {
-    logger.error(message)
+    logger.info(message)
   },
 }
 

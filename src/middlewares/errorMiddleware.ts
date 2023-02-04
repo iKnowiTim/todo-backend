@@ -9,7 +9,7 @@ export const errorMiddleware = (
   next: NextFunction
 ) => {
   if (!(err instanceof HttpException)) {
-    logger.error(`Server error.`)
+    logger.log('error', `Server error.`)
     err = new HttpException(500, 'Server error')
   }
 

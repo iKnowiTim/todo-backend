@@ -1,11 +1,41 @@
-import { Task } from './task'
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  OneToOne,
+  JoinColumn,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm'
+import { Board } from './board'
 
-export interface List {
+@Entity()
+export class List extends BaseEntity {
+  @PrimaryGeneratedColumn()
   id: number
+
+  @Column({
+    nullable: false,
+  })
   title: string
+
+  @Column()
   description: string
-  tasks: Task[]
+
+  @ManyToOne(() => Board, (board) => board.id)
+  board: Board
+
+  @CreateDateColumn()
   createdAt: Date
+
+  @UpdateDateColumn()
   updatedAt: Date
+
+  @DeleteDateColumn({
+    nullable: true,
+  })
   deletedAt: Date
 }
