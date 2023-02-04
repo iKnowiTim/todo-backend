@@ -7,7 +7,7 @@ export = {
   password: '76543219q',
   logging: true,
   synchronize: false,
-  entities: ['./src/models/*.ts'],
+  entities: ['./src/entities/*.ts'],
   migrations: ['./src/migrations/*.ts'],
   cli: {
     migrationsDir: './src/migrations',

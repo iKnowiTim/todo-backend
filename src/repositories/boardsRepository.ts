@@ -1,7 +1,7 @@
 import { GetBoardsWithCountsResponseDto } from '../dto/boardsDto'
-import { Board } from '../models/board'
-import { List } from '../models/list'
-import { Task } from '../models/task'
+import { Board } from '../entities/board'
+import { List } from '../entities/list'
+import { Task } from '../entities/task'
 
 // export async function getBoards(): Promise<Board[]> {
 
