@@ -1,3 +1,5 @@
 import * as dotenv from 'dotenv'
 
-export const load = dotenv.config()
+export function initDataSettingsEnv() {
+  dotenv.config()
+}

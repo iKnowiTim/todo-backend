@@ -26,9 +26,6 @@ export interface GetBoardResponseDto {
       readonly description: string
       readonly createdAt: Date
       readonly updatedAt: Date
-      readonly tags: {
-        readonly description: string
-      }[]
     }[]
   }[]
 }
