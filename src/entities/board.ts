@@ -7,7 +7,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm'
+import { List } from './list'
 import { User } from './user'
 
 @Entity({
@@ -25,10 +27,13 @@ export class Board extends BaseEntity {
   })
   title: string
 
-  @ManyToOne(() => User, (user) => user.id, {
+  @ManyToOne(() => User, (user) => user.boards, {
     nullable: false,
   })
   user: User
+
+  @OneToMany(() => List, (list) => list.board)
+  lists: List[]
 
   @CreateDateColumn()
   createdAt: Date

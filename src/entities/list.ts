@@ -9,8 +9,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm'
 import { Board } from './board'
+import { Task } from './task'
 
 @Entity()
 export class List extends BaseEntity {
@@ -25,8 +27,11 @@ export class List extends BaseEntity {
   @Column()
   description: string
 
-  @ManyToOne(() => Board, (board) => board.id)
+  @ManyToOne(() => Board, (board) => board.lists)
   board: Board
+
+  @OneToMany(() => Task, (task) => task.list)
+  tasks: Task[]
 
   @CreateDateColumn()
   createdAt: Date

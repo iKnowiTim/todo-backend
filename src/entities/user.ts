@@ -30,6 +30,9 @@ export class User extends BaseEntity {
   })
   password: string
 
+  @OneToMany(() => Board, (board) => board.user)
+  boards: Board[]
+
   @CreateDateColumn()
   createdAt: Date
 

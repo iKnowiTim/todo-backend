@@ -26,7 +26,7 @@ export class Task extends BaseEntity {
   @Column()
   description: string
 
-  @ManyToOne(() => List, (list) => list.id)
+  @ManyToOne(() => List, (list) => list.tasks)
   list: List
 
   @Column()
