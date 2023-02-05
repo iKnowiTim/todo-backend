@@ -5,7 +5,7 @@ import { logger } from '../common/logger'
 import { CreateBoardRequestDto, UpdateBoardResponseDto } from '../dto/boardsDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 
-import { createBoardSchema, updateBoardSchema } from '../Schemes/BoardSchemes'
+import { createBoardSchema, updateBoardSchema } from '../Schemes/boardSchemes'
 
 import { BoardRepository } from '../repositories/boardRepository'
 import { BoardService } from '../services/boardsService'

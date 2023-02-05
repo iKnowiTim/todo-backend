@@ -9,7 +9,7 @@ import { Task } from '../entities/task'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import { BoardRepository } from '../repositories/boardRepository'
 import { ListRepository } from '../repositories/listRepository'
-import { createListSchema } from '../Schemes/ListSchemes'
+import { createListSchema } from '../Schemes/listSchemes'
 import { ListService } from '../services/listsService'
 
 export const listRouter = Router()
