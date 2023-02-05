@@ -313,9 +313,6 @@ GET /lists/${id}/tasks
   completed: boolean,
   createdAt: Date,
   updatedAt: Date
-  tags: {
-    description: string
-  }[]
 }[]
 
 401 unauthorized
