@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express'
 
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
-import { CreateBoardRequestDto, UpdateBoardResponseDto } from '../dto/boardsDto'
+import { CreateBoardDto, UpdatedBoardDto } from '../dto/boardsDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 
 import { createBoardSchema, updateBoardSchema } from '../Schemes/boardSchemes'
@@ -48,10 +48,11 @@ boardsRouter.post(
   validationMiddleware(createBoardSchema),
   async (req, res, next): Promise<void> => {
     try {
-      const newBoard: CreateBoardRequestDto = req.body
+      const newBoard: CreateBoardDto = req.body
 
-      await BoardRepository.postBoard(newBoard)
-      res.send(newBoard)
+      await BoardService.createBoard(newBoard).then((board) => {
+        res.send(board)
+      })
     } catch (error) {
       next(error)
     }
@@ -86,8 +87,8 @@ boardsRouter.patch(
         throw new HttpException(400, 'Bad request')
       }
 
-      await BoardRepository.updateBoard(id, req.body).then((updated) => {
-        res.send(updated)
+      await BoardService.updateBoard(id, req.body).then(async (updated) => {
+        await res.send(updated)
       })
     } catch (error) {
       next(error)

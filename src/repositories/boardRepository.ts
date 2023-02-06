@@ -1,9 +1,9 @@
 import { Board } from '../entities/board'
 import { createQueryBuilder, getRepository, In } from 'typeorm'
 import {
-  CreateBoardRequestDto,
-  UpdateBoardRequestDto,
-  UpdateBoardResponseDto,
+  CreateBoardDto,
+  UpdateBoardDto,
+  UpdatedBoardDto,
 } from '../dto/boardsDto'
 import { List } from '../entities/list'
 import { Task } from '../entities/task'
@@ -41,9 +41,9 @@ export class BoardRepository {
       })
   }
 
-  static async postBoard(boardDto: CreateBoardRequestDto): Promise<void> {
-    await userRepository.GetUserById(1).then(async (user) => {
-      await createQueryBuilder()
+  static async createBoard(boardDto: CreateBoardDto): Promise<any> {
+    const board = await userRepository.GetUserById(1).then(async (user) => {
+      return await createQueryBuilder()
         .insert()
         .into(Board)
         .values({
@@ -51,15 +51,18 @@ export class BoardRepository {
           description: boardDto.description,
           user: user,
         })
+        .returning('*')
         .execute()
+        .then((result) => {
+          return result.raw[0]
+        })
     })
+
+    return board
   }
 
-  static async updateBoard(
-    id: number,
-    boardDto: UpdateBoardRequestDto
-  ): Promise<UpdateBoardResponseDto> {
-    await getRepository(Board)
+  static async updateBoard(id: number, boardDto: UpdateBoardDto): Promise<any> {
+    const board = await getRepository(Board)
       .createQueryBuilder()
       .update(Board)
       .set({
@@ -68,7 +71,12 @@ export class BoardRepository {
         updatedAt: new Date(),
       })
       .where(`id = ${id}`)
+      .returning('*')
       .execute()
-    return getRepository(Board).findOneOrFail(id)
+      .then((result) => {
+        return result.raw[0]
+      })
+
+    return board
   }
 }

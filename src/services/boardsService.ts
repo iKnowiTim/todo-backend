@@ -1,14 +1,18 @@
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
 import {
-  CreateBoardRequestDto,
-  GetBoardResponseDto,
-  GetBoardsWithCountsResponseDto,
+  CreateBoardDto,
+  CreatedBoardDto,
+  GetBoardDto,
+  GetBoardCountDto,
+  UpdateBoardDto,
+  UpdatedBoardDto,
 } from '../dto/boardsDto'
+import { Board } from '../entities/board'
 import { BoardRepository } from '../repositories/boardRepository'
 
 export class BoardService {
-  static async getBoards(): Promise<GetBoardsWithCountsResponseDto[]> {
+  static async getBoards(): Promise<GetBoardCountDto[]> {
     const boards = await BoardRepository.getBoardsWithCount()
 
     return boards.map((board) => ({
@@ -22,7 +26,7 @@ export class BoardService {
     }))
   }
 
-  static async getBoard(id: number): Promise<GetBoardResponseDto> {
+  static async getBoard(id: number): Promise<GetBoardDto> {
     const board = await BoardRepository.getBoardById(id)
 
     if (!board) {
@@ -53,5 +57,39 @@ export class BoardService {
     }
 
     return boardDto
+  }
+
+  static async updateBoard(
+    id: number,
+    boardDto: UpdateBoardDto
+  ): Promise<UpdatedBoardDto> {
+    const board: Board = await BoardRepository.updateBoard(id, boardDto)
+
+    if (!board) {
+      throw new HttpException(404, 'not found')
+    }
+
+    return {
+      id: board.id,
+      title: board.title,
+      description: board.description,
+      updatedAt: board.updatedAt,
+    }
+  }
+
+  static async createBoard(boardDto: CreateBoardDto): Promise<CreatedBoardDto> {
+    const board: Board = await BoardRepository.createBoard(boardDto)
+
+    if (!board) {
+      throw new HttpException(400, 'Bad request')
+    }
+
+    return {
+      id: board.id,
+      title: board.title,
+      description: board.description,
+      createdAt: board.createdAt,
+      updatedAt: board.updatedAt,
+    }
   }
 }
