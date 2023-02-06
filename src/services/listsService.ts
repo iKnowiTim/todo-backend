@@ -54,7 +54,7 @@ export class ListService {
     id: number,
     listDto: UpdateListDto
   ): Promise<UpdatedListDto> {
-    const list: List = await ListRepository.updateList(id, listDto)
+    const list = await ListRepository.updateList(id, listDto)
 
     return {
       id: list.id,

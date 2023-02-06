@@ -9,7 +9,7 @@ import {
 import { Board } from '../entities/board'
 import { List } from '../entities/list'
 import { Task } from '../entities/task'
-import { BoardRepository } from './boardRepository'
+import * as BoardRepository from './boardRepository'
 
 type ListWithCount = List & { tasksCount: number }
 export class ListRepository {
