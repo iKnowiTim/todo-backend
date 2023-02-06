@@ -1,11 +1,7 @@
 import { Router } from 'express'
-import { getRepository } from 'typeorm'
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
 import { CreateListDto } from '../dto/listsDto'
-import { Board } from '../entities/board'
-import { List } from '../entities/list'
-import { Task } from '../entities/task'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import { BoardRepository } from '../repositories/boardRepository'
 import { ListRepository } from '../repositories/listRepository'
@@ -28,9 +24,8 @@ listRouter.get('/boards/:id/lists', async (req, res, next): Promise<void> => {
       throw new HttpException(404, `Board is Not Found with id = ${id}`)
     }
 
-    await ListService.getLists(id).then(async (lists) => {
-      await res.send(lists)
-    })
+    const lists = await ListService.getLists(id)
+    res.send(lists)
   } catch (error) {
     logger.error(error)
     next(error)
@@ -45,9 +40,8 @@ listRouter.get('/lists/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    await ListService.getList(id).then(async (list) => {
-      await res.send(list)
-    })
+    const list = await ListService.getList(id)
+    res.send(list)
   } catch (error) {
     logger.error(error)
     next(error)
@@ -73,9 +67,8 @@ listRouter.post(
 
       const listDto: CreateListDto = req.body
 
-      await ListService.createList(id, listDto).then(async (list) => {
-        await res.send(list)
-      })
+      const list = await ListService.createList(id, listDto)
+      res.send(list)
     } catch (error) {
       logger.error(error)
       next(error)
@@ -97,9 +90,8 @@ listRouter.delete('/lists/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(404, 'Not found')
     }
 
-    await ListRepository.deleteListById(id).then(() => {
-      res.send('Done. List removed')
-    })
+    await ListRepository.deleteListById(id)
+    res.send('list removed')
   } catch (error) {
     logger.error(error)
     next(error)
@@ -122,9 +114,8 @@ listRouter.patch('/lists/:id', async (req, res, next): Promise<void> => {
 
     const listDto: CreateListDto = req.body
 
-    await ListService.updateList(id, listDto).then(async (list) => {
-      await res.send(list)
-    })
+    const updated = await ListService.updateList(id, listDto)
+    res.send(updated)
   } catch (error) {
     logger.error(error)
     next(error)

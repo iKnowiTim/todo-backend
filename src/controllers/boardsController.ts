@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response, Router } from 'express'
+import { Router } from 'express'
 
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
-import { CreateBoardDto, UpdatedBoardDto } from '../dto/boardsDto'
+import { CreateBoardDto } from '../dto/boardsDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 
 import { createBoardSchema, updateBoardSchema } from '../Schemes/boardSchemes'
@@ -14,9 +14,8 @@ export const boardsRouter = Router()
 
 boardsRouter.get('/boards', async (req, res, next): Promise<void> => {
   try {
-    await BoardService.getBoards().then((boards) => {
-      res.send(boards)
-    })
+    const boards = await BoardService.getBoards()
+    res.send(boards)
   } catch (error) {
     logger.error(error)
     next()
@@ -32,12 +31,8 @@ boardsRouter.get('/boards/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    await BoardService.getBoard(id).then(async (board) => {
-      if (!board) {
-        res.status(404).send('Not found')
-      }
-      await res.send(board)
-    })
+    const board = await BoardService.getBoard(id)
+    res.send(board)
   } catch (error) {
     next(error)
   }
@@ -50,9 +45,8 @@ boardsRouter.post(
     try {
       const newBoard: CreateBoardDto = req.body
 
-      await BoardService.createBoard(newBoard).then((board) => {
-        res.send(board)
-      })
+      const created = await BoardService.createBoard(newBoard)
+      res.send(created)
     } catch (error) {
       next(error)
     }
@@ -67,9 +61,8 @@ boardsRouter.delete('/boards/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    await BoardRepository.deleteBoardById(id).then(() => {
-      res.send('board was delete')
-    })
+    await BoardRepository.deleteBoardById(id)
+    res.send('Board removed')
   } catch (error) {
     logger.error(error)
     next(error)
@@ -87,9 +80,8 @@ boardsRouter.patch(
         throw new HttpException(400, 'Bad request')
       }
 
-      await BoardService.updateBoard(id, req.body).then(async (updated) => {
-        await res.send(updated)
-      })
+      const updated = await BoardService.updateBoard(id, req.body)
+      res.send(updated)
     } catch (error) {
       next(error)
     }

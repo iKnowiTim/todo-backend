@@ -24,9 +24,8 @@ taskRouter.get('/lists/:id/tasks', async (req, res, next): Promise<void> => {
       throw new HttpException(404, 'not found')
     }
 
-    await taskService.getTasks(listId).then(async (tasks) => {
-      await res.send(tasks)
-    })
+    const task = await taskService.getTasks(listId)
+    res.send(task)
   } catch (error) {
     logger.error(error)
     next(error)
@@ -46,9 +45,8 @@ taskRouter.post(
 
       const listDto: createTaskDto = req.body
 
-      await taskService.createTask(listId, listDto).then(async (task) => {
-        res.send(task)
-      })
+      const created = await taskService.createTask(listId, listDto)
+      res.send(created)
     } catch (error) {
       logger.error(error)
       next(error)
@@ -60,9 +58,8 @@ taskRouter.delete('/tasks/:id', async (req, res, next): Promise<void> => {
   try {
     const id = parseInt(req.params.id)
 
-    await TaskRepository.deleteTaskById(id).then(() => {
-      res.send('Task removed')
-    })
+    await TaskRepository.deleteTaskById(id)
+    res.send('Task removed')
   } catch (error) {
     logger.error(error)
     next(error)
@@ -82,9 +79,8 @@ taskRouter.patch(
 
       const taskDto = req.body
 
-      await taskService.updateTask(id, taskDto).then(async (task) => {
-        await res.send(task)
-      })
+      const updated = await taskService.updateTask(id, taskDto)
+      res.send(updated)
     } catch (error) {
       logger.error(error)
       next(error)
