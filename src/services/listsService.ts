@@ -1,5 +1,12 @@
 import { HttpException } from '../common/httpException'
-import { GetListDto, GetListsDto } from '../dto/listsDto'
+import {
+  CreatedListDto,
+  GetListDto,
+  GetListsDto,
+  UpdatedListDto,
+  UpdateListDto,
+} from '../dto/listsDto'
+import { List } from '../entities/list'
 import { ListRepository } from '../repositories/listRepository'
 
 export class ListService {
@@ -40,6 +47,35 @@ export class ListService {
         completed: task.completed,
         deletedAt: task.deletedAt,
       })),
+    }
+  }
+
+  static async updateList(
+    id: number,
+    listDto: UpdateListDto
+  ): Promise<UpdatedListDto> {
+    const list: List = await ListRepository.updateList(id, listDto)
+
+    return {
+      id: list.id,
+      title: list.title,
+      description: list.description,
+      updatedAt: list.updatedAt,
+    }
+  }
+
+  static async createList(
+    id: number,
+    listDto: UpdateListDto
+  ): Promise<CreatedListDto> {
+    const list: List = await ListRepository.createList(id, listDto)
+
+    return {
+      id: list.id,
+      title: list.title,
+      description: list.description,
+      createdAt: list.createdAt,
+      updatedAt: list.updatedAt,
     }
   }
 }

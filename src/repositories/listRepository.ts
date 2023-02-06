@@ -41,9 +41,9 @@ export class ListRepository {
   static async createList(
     boardId: number,
     listDto: CreateListDto
-  ): Promise<void> {
-    await BoardRepository.getBoardById(1).then(async (board) => {
-      await createQueryBuilder('list')
+  ): Promise<List> {
+    const list = await BoardRepository.getBoardById(1).then(async (board) => {
+      return await createQueryBuilder('list')
         .insert()
         .into(List)
         .values({
@@ -51,12 +51,18 @@ export class ListRepository {
           description: listDto.description,
           board: board,
         })
+        .returning('*')
         .execute()
+        .then((result) => {
+          return result.raw[0]
+        })
     })
+
+    return list
   }
 
-  static async updateList(id: number, listDto: UpdateListDto): Promise<void> {
-    await getRepository(List)
+  static async updateList(id: number, listDto: UpdateListDto): Promise<List> {
+    const list = await getRepository(List)
       .createQueryBuilder('list')
       .update(List)
       .set({
@@ -65,6 +71,12 @@ export class ListRepository {
         updatedAt: new Date(),
       })
       .where(`id = ${id}`)
+      .returning('*')
       .execute()
+      .then((result) => {
+        return result.raw[0]
+      })
+
+    return list
   }
 }

@@ -73,7 +73,7 @@ listRouter.post(
 
       const listDto: CreateListDto = req.body
 
-      await ListRepository.createList(id, listDto).then(async (list) => {
+      await ListService.createList(id, listDto).then(async (list) => {
         await res.send(list)
       })
     } catch (error) {
@@ -122,7 +122,7 @@ listRouter.patch('/lists/:id', async (req, res, next): Promise<void> => {
 
     const listDto: CreateListDto = req.body
 
-    await ListRepository.updateList(id, listDto).then(async (list) => {
+    await ListService.updateList(id, listDto).then(async (list) => {
       await res.send(list)
     })
   } catch (error) {
