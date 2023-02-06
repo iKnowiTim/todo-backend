@@ -46,7 +46,7 @@ taskRouter.post(
 
       const listDto: createTaskDto = req.body
 
-      await TaskRepository.createTask(listId, listDto).then(async (task) => {
+      await taskService.createTask(listId, listDto).then(async (task) => {
         res.send(task)
       })
     } catch (error) {
@@ -82,7 +82,7 @@ taskRouter.patch(
 
       const taskDto = req.body
 
-      await TaskRepository.updateTask(id, taskDto).then(async (task) => {
+      await taskService.updateTask(id, taskDto).then(async (task) => {
         await res.send(task)
       })
     } catch (error) {

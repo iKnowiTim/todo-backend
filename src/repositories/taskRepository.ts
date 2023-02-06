@@ -28,9 +28,9 @@ export class TaskRepository {
   static async createTask(
     listId: number,
     taskDto: createTaskDto
-  ): Promise<void> {
-    await ListRepository.getListById(1).then(async (list) => {
-      await createQueryBuilder('task')
+  ): Promise<Task> {
+    const task = await ListRepository.getListById(1).then(async (list) => {
+      return await createQueryBuilder('task')
         .insert()
         .into(Task)
         .values({
@@ -39,12 +39,18 @@ export class TaskRepository {
           completed: false,
           list: list,
         })
+        .returning('*')
         .execute()
+        .then((result) => {
+          return result.raw[0]
+        })
     })
+
+    return task
   }
 
-  static async updateTask(id: number, taskDto: updateTaskDto): Promise<void> {
-    await getRepository(Task)
+  static async updateTask(id: number, taskDto: updateTaskDto): Promise<Task> {
+    const task = await getRepository(Task)
       .createQueryBuilder('task')
       .update(Task)
       .set({
@@ -54,6 +60,12 @@ export class TaskRepository {
         updatedAt: new Date(),
       })
       .where(`id = ${id}`)
+      .returning('*')
       .execute()
+      .then((result) => {
+        return result.raw[0]
+      })
+
+    return task
   }
 }
