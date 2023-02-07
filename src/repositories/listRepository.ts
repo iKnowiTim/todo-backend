@@ -43,19 +43,13 @@ export async function createList(
   boardId: number,
   listDto: CreateListDto
 ): Promise<List> {
-  const board = await BoardRepository.getBoardById(boardId)
-
-  if (!board) {
-    throw new HttpException(404, 'Board not found')
-  }
-
   const result = await createQueryBuilder('list')
     .insert()
     .into(List)
     .values({
       title: listDto.title,
       description: listDto.description,
-      board: board,
+      board: new Board({ id: boardId }),
     })
     .returning('*')
     .execute()

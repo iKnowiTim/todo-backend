@@ -6,8 +6,8 @@ import {
   UpdatedListDto,
   UpdateListDto,
 } from '../dto/listsDto'
-import { List } from '../entities/list'
 import * as listRepository from '../repositories/listRepository'
+import * as boardRepository from '../repositories/boardRepository'
 
 export class ListService {
   static async getLists(boardId: number): Promise<GetListsDto[]> {
@@ -65,10 +65,16 @@ export class ListService {
   }
 
   static async createList(
-    id: number,
+    boardId: number,
     listDto: UpdateListDto
   ): Promise<CreatedListDto> {
-    const list = await listRepository.createList(id, listDto)
+    const board = await boardRepository.getBoardById(boardId)
+
+    if (!board) {
+      throw new HttpException(404, 'Board not found')
+    }
+
+    const list = await listRepository.createList(boardId, listDto)
 
     return {
       id: list.id,
