@@ -1,6 +1,6 @@
 import { createQueryBuilder, getRepository } from 'typeorm'
 import { HttpException } from '../common/httpException'
-import { createTaskDto, updatedTaskDto, updateTaskDto } from '../dto/tasksDto'
+import { CreateTaskDto, UpdatedTaskDto, UpdateTaskDto } from '../dto/tasksDto'
 import { List } from '../entities/list'
 import { Task } from '../entities/task'
 import * as listRepository from './listRepository'
@@ -29,7 +29,7 @@ export async function deleteTaskById(id: number): Promise<void> {
 
 export async function createTask(
   listId: number,
-  taskDto: createTaskDto
+  taskDto: CreateTaskDto
 ): Promise<Task> {
   const list = await listRepository.getListById(listId)
   const result = await createQueryBuilder('task')
@@ -49,7 +49,7 @@ export async function createTask(
 
 export async function updateTask(
   id: number,
-  taskDto: updateTaskDto
+  taskDto: UpdateTaskDto
 ): Promise<Task> {
   const result = await getRepository(Task)
     .createQueryBuilder('task')

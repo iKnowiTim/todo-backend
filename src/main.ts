@@ -1,5 +1,5 @@
 import express from 'express'
-import { boardsRouter } from './controllers/boardsController'
+import { boardsRouter } from './controllers/boardController'
 import { errorMiddleware } from './middlewares/errorMiddleware'
 import { morganMiddleware } from './middlewares/morganMiddleware'
 import { initDataSettingsEnv } from './common/settings'

@@ -8,7 +8,7 @@ import { validationMiddleware } from '../middlewares/validationMiddleware'
 import { createBoardSchema, updateBoardSchema } from '../Schemes/boardSchemes'
 
 import * as boardRepository from '../repositories/boardRepository'
-import * as boardsService from '../services/boardsService'
+import * as boardsService from '../services/boardService'
 
 export const boardsRouter = Router()
 

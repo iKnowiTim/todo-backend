@@ -1,10 +1,10 @@
-export interface createTaskDto {
+export interface CreateTaskDto {
   readonly title: string
   readonly description: string
   readonly completed: boolean
 }
 
-export interface createdTaskDto {
+export interface CreatedTaskDto {
   readonly id: number
   readonly title: string
   readonly description: string
@@ -12,19 +12,19 @@ export interface createdTaskDto {
   readonly updatedAt: Date
 }
 
-export interface updateTaskDto {
+export interface UpdateTaskDto {
   readonly title: string
   readonly description: string
 }
 
-export interface updatedTaskDto {
+export interface UpdatedTaskDto {
   readonly id: number
   readonly title: string
   readonly description: string
   readonly updatedAt: Date
 }
 
-export interface getTasksDto {
+export interface GetTasksDto {
   readonly id: number
   readonly title: string
   readonly description: string

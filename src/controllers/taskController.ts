@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
-import { createTaskDto } from '../dto/tasksDto'
+import { CreateTaskDto } from '../dto/tasksDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import * as listRepository from '../repositories/listRepository'
 import * as taskRepository from '../repositories/taskRepository'
@@ -43,7 +43,7 @@ taskRouter.post(
         throw new HttpException(400, 'bad request')
       }
 
-      const listDto: createTaskDto = req.body
+      const listDto: CreateTaskDto = req.body
 
       const created = await taskService.createTask(listId, listDto)
       res.send(created)
