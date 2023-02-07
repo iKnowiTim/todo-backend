@@ -8,6 +8,7 @@ import {
 import { List } from '../entities/list'
 import { Task } from '../entities/task'
 import { userRepository } from './userRepository'
+import { HttpException } from '../common/httpException'
 
 type BoardWithCounts = Board & { listsCount: number; tasksCount: number }
 export async function getBoardsWithCount(): Promise<BoardWithCounts[]> {
@@ -28,38 +29,41 @@ export async function getBoardById(id: number): Promise<Board | undefined> {
 }
 
 export async function deleteBoardById(id: number): Promise<void> {
-  await getRepository(Board)
-    .findOne(id)
-    .then(async (board) => {
-      if (board) await Board.remove(board)
-    })
+  const board = await getRepository(Board).findOne(id)
+
+  if (!board) {
+    throw new HttpException(404, 'not found')
+  }
+
+  await Board.softRemove(board)
 }
 
 export async function createBoard(boardDto: CreateBoardDto): Promise<any> {
-  const board = await userRepository.GetUserById(1).then(async (user) => {
-    return await createQueryBuilder()
-      .insert()
-      .into(Board)
-      .values({
-        title: boardDto.title,
-        description: boardDto.description,
-        user: user,
-      })
-      .returning('*')
-      .execute()
-      .then((result) => {
-        return result.raw[0]
-      })
-  })
+  const user = await userRepository.GetUserById(1)
 
-  return board
+  if (!user) {
+    throw new HttpException(404, 'not found')
+  }
+
+  const result = await createQueryBuilder()
+    .insert()
+    .into(Board)
+    .values({
+      title: boardDto.title,
+      description: boardDto.description,
+      user: user,
+    })
+    .returning('*')
+    .execute()
+
+  return result.raw[0]
 }
 
 export async function updateBoard(
   id: number,
   boardDto: UpdateBoardDto
 ): Promise<any> {
-  const board = await getRepository(Board)
+  const result = await getRepository(Board)
     .createQueryBuilder()
     .update(Board)
     .set({
@@ -70,9 +74,6 @@ export async function updateBoard(
     .where(`id = ${id}`)
     .returning('*')
     .execute()
-    .then((result) => {
-      return result.raw[0]
-    })
 
-  return board
+  return result.raw[0]
 }
