@@ -6,7 +6,7 @@ import { validationMiddleware } from '../middlewares/validationMiddleware'
 import * as BoardRepository from '../repositories/boardRepository'
 import * as listRepository from '../repositories/listRepository'
 import { createListSchema } from '../Schemes/listSchemes'
-import { ListService } from '../services/listsService'
+import { ListService } from '../services/listService'
 
 export const listRouter = Router()
 
