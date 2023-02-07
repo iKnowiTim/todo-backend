@@ -68,7 +68,7 @@ export class ListService {
     id: number,
     listDto: UpdateListDto
   ): Promise<CreatedListDto> {
-    const list: List = await listRepository.createList(id, listDto)
+    const list = await listRepository.createList(id, listDto)
 
     return {
       id: list.id,
