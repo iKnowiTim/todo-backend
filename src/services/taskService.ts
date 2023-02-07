@@ -31,7 +31,7 @@ export async function createTask(
   listId: number,
   taskDto: createTaskDto
 ): Promise<createdTaskDto> {
-  const task: Task = await taskRepository.createTask(listId, taskDto)
+  const task = await taskRepository.createTask(listId, taskDto)
 
   return {
     id: task.id,
@@ -46,7 +46,7 @@ export async function updateTask(
   id: number,
   taskDto: updateTaskDto
 ): Promise<updatedTaskDto> {
-  const task: Task = await taskRepository.updateTask(id, taskDto)
+  const task = await taskRepository.updateTask(id, taskDto)
 
   return {
     id: task.id,
