@@ -1,4 +1,5 @@
 import { createQueryBuilder, getRepository } from 'typeorm'
+import { HttpException } from '../common/httpException'
 import { createTaskDto, updatedTaskDto, updateTaskDto } from '../dto/tasksDto'
 import { List } from '../entities/list'
 import { Task } from '../entities/task'
@@ -17,42 +18,40 @@ export async function getTaskById(listId: number): Promise<Task[] | undefined> {
 }
 
 export async function deleteTaskById(id: number): Promise<void> {
-  await getRepository(Task)
-    .findOne(id)
-    .then(async (task) => {
-      if (task) await Task.remove(task)
-    })
+  const task = await getRepository(Task).findOne(id)
+
+  if (!task) {
+    throw new HttpException(404, 'Not found')
+  }
+
+  await Task.softRemove(task)
 }
 
 export async function createTask(
   listId: number,
   taskDto: createTaskDto
 ): Promise<Task> {
-  const task = await listRepository.getListById(1).then(async (list) => {
-    return await createQueryBuilder('task')
-      .insert()
-      .into(Task)
-      .values({
-        title: taskDto.title,
-        description: taskDto.description,
-        completed: false,
-        list: list,
-      })
-      .returning('*')
-      .execute()
-      .then((result) => {
-        return result.raw[0]
-      })
-  })
+  const list = await listRepository.getListById(listId)
+  const result = await createQueryBuilder('task')
+    .insert()
+    .into(Task)
+    .values({
+      title: taskDto.title,
+      description: taskDto.description,
+      completed: false,
+      list: list,
+    })
+    .returning('*')
+    .execute()
 
-  return task
+  return result.raw[0]
 }
 
 export async function updateTask(
   id: number,
   taskDto: updateTaskDto
 ): Promise<Task> {
-  const task = await getRepository(Task)
+  const result = await getRepository(Task)
     .createQueryBuilder('task')
     .update(Task)
     .set({
@@ -64,9 +63,6 @@ export async function updateTask(
     .where(`id = ${id}`)
     .returning('*')
     .execute()
-    .then((result) => {
-      return result.raw[0]
-    })
 
-  return task
+  return result.raw[0]
 }
