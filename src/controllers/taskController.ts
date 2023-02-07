@@ -3,7 +3,7 @@ import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
 import { createTaskDto } from '../dto/tasksDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
-import { ListRepository } from '../repositories/listRepository'
+import * as listRepository from '../repositories/listRepository'
 import { TaskRepository } from '../repositories/taskRepository'
 import { createTaskSchema, updateTaskSchema } from '../Schemes/taskSchemes'
 import { taskService } from '../services/taskService'
@@ -18,7 +18,7 @@ taskRouter.get('/lists/:id/tasks', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'bad request')
     }
 
-    const list = await ListRepository.getListById(listId)
+    const list = await listRepository.getListById(listId)
 
     if (!list) {
       throw new HttpException(404, 'not found')

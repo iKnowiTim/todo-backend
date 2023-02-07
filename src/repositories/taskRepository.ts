@@ -2,7 +2,7 @@ import { createQueryBuilder, getRepository } from 'typeorm'
 import { createTaskDto, updatedTaskDto, updateTaskDto } from '../dto/tasksDto'
 import { List } from '../entities/list'
 import { Task } from '../entities/task'
-import { ListRepository } from './listRepository'
+import * as listRepository from './listRepository'
 
 export class TaskRepository {
   static async getTasks(): Promise<Task[]> {
@@ -29,7 +29,7 @@ export class TaskRepository {
     listId: number,
     taskDto: createTaskDto
   ): Promise<Task> {
-    const task = await ListRepository.getListById(1).then(async (list) => {
+    const task = await listRepository.getListById(1).then(async (list) => {
       return await createQueryBuilder('task')
         .insert()
         .into(Task)

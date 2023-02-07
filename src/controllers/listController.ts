@@ -4,7 +4,7 @@ import { logger } from '../common/logger'
 import { CreateListDto } from '../dto/listsDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import * as BoardRepository from '../repositories/boardRepository'
-import { ListRepository } from '../repositories/listRepository'
+import * as listRepository from '../repositories/listRepository'
 import { createListSchema } from '../Schemes/listSchemes'
 import { ListService } from '../services/listsService'
 
@@ -84,13 +84,13 @@ listRouter.delete('/lists/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    const list = await ListRepository.getListById(id)
+    const list = await listRepository.getListById(id)
 
     if (!list) {
       throw new HttpException(404, 'Not found')
     }
 
-    await ListRepository.deleteListById(id)
+    await listRepository.deleteListById(id)
     res.send('list removed')
   } catch (error) {
     logger.error(error)
@@ -106,7 +106,7 @@ listRouter.patch('/lists/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    const list = await ListRepository.getListById(id)
+    const list = await listRepository.getListById(id)
 
     if (!list) {
       throw new HttpException(404, 'Not found')

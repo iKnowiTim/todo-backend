@@ -7,11 +7,11 @@ import {
   UpdateListDto,
 } from '../dto/listsDto'
 import { List } from '../entities/list'
-import { ListRepository } from '../repositories/listRepository'
+import * as listRepository from '../repositories/listRepository'
 
 export class ListService {
   static async getLists(boardId: number): Promise<GetListsDto[]> {
-    const lists = await ListRepository.getLists(boardId)
+    const lists = await listRepository.getLists(boardId)
 
     const listsDto: GetListsDto[] = lists.map((list) => ({
       id: list.id,
@@ -26,7 +26,7 @@ export class ListService {
   }
 
   static async getList(boardId: number): Promise<GetListDto> {
-    const list = await ListRepository.getListById(boardId)
+    const list = await listRepository.getListById(boardId)
 
     if (!list) {
       throw new HttpException(404, 'Not found')
@@ -54,7 +54,7 @@ export class ListService {
     id: number,
     listDto: UpdateListDto
   ): Promise<UpdatedListDto> {
-    const list = await ListRepository.updateList(id, listDto)
+    const list = await listRepository.updateList(id, listDto)
 
     return {
       id: list.id,
@@ -68,7 +68,7 @@ export class ListService {
     id: number,
     listDto: UpdateListDto
   ): Promise<CreatedListDto> {
-    const list: List = await ListRepository.createList(id, listDto)
+    const list: List = await listRepository.createList(id, listDto)
 
     return {
       id: list.id,
