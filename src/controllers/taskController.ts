@@ -4,9 +4,9 @@ import { logger } from '../common/logger'
 import { createTaskDto } from '../dto/tasksDto'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import * as listRepository from '../repositories/listRepository'
-import { TaskRepository } from '../repositories/taskRepository'
+import * as taskRepository from '../repositories/taskRepository'
 import { createTaskSchema, updateTaskSchema } from '../Schemes/taskSchemes'
-import { taskService } from '../services/taskService'
+import * as taskService from '../services/taskService'
 
 export const taskRouter = Router()
 
@@ -58,7 +58,7 @@ taskRouter.delete('/tasks/:id', async (req, res, next): Promise<void> => {
   try {
     const id = parseInt(req.params.id)
 
-    await TaskRepository.deleteTaskById(id)
+    await taskRepository.deleteTaskById(id)
     res.send('Task removed')
   } catch (error) {
     logger.error(error)

@@ -8,52 +8,50 @@ import {
   updateTaskDto,
 } from '../dto/tasksDto'
 import { Task } from '../entities/task'
-import { TaskRepository } from '../repositories/taskRepository'
+import * as taskRepository from '../repositories/taskRepository'
 
-export class taskService {
-  static async getTasks(listId: number): Promise<getTasksDto[]> {
-    const tasks = await TaskRepository.getTaskById(listId)
+export async function getTasks(listId: number): Promise<getTasksDto[]> {
+  const tasks = await taskRepository.getTaskById(listId)
 
-    if (!tasks) {
-      throw new HttpException(404, 'not found')
-    }
-
-    return tasks.map((task) => ({
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      completed: task.completed,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-    }))
+  if (!tasks) {
+    throw new HttpException(404, 'not found')
   }
 
-  static async createTask(
-    listId: number,
-    taskDto: createTaskDto
-  ): Promise<createdTaskDto> {
-    const task: Task = await TaskRepository.createTask(listId, taskDto)
+  return tasks.map((task) => ({
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    completed: task.completed,
+    createdAt: task.createdAt,
+    updatedAt: task.updatedAt,
+  }))
+}
 
-    return {
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-    }
+export async function createTask(
+  listId: number,
+  taskDto: createTaskDto
+): Promise<createdTaskDto> {
+  const task: Task = await taskRepository.createTask(listId, taskDto)
+
+  return {
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    createdAt: task.createdAt,
+    updatedAt: task.updatedAt,
   }
+}
 
-  static async updateTask(
-    id: number,
-    taskDto: updateTaskDto
-  ): Promise<updatedTaskDto> {
-    const task: Task = await TaskRepository.updateTask(id, taskDto)
+export async function updateTask(
+  id: number,
+  taskDto: updateTaskDto
+): Promise<updatedTaskDto> {
+  const task: Task = await taskRepository.updateTask(id, taskDto)
 
-    return {
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      updatedAt: task.updatedAt,
-    }
+  return {
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    updatedAt: task.updatedAt,
   }
 }
