@@ -16,6 +16,11 @@ import { User } from './user'
   name: 'board',
 })
 export class Board extends BaseEntity {
+  constructor(board: Partial<Board>) {
+    super()
+    Object.assign(this, board)
+  }
+
   @PrimaryGeneratedColumn()
   id: number
 
