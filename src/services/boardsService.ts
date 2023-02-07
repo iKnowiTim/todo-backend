@@ -62,7 +62,7 @@ export async function updateBoard(
   id: number,
   boardDto: UpdateBoardDto
 ): Promise<UpdatedBoardDto> {
-  const board: Board = await boardRepository.updateBoard(id, boardDto)
+  const board = await boardRepository.updateBoard(id, boardDto)
 
   if (!board) {
     throw new HttpException(404, 'not found')
@@ -79,7 +79,7 @@ export async function updateBoard(
 export async function createBoard(
   boardDto: CreateBoardDto
 ): Promise<CreatedBoardDto> {
-  const board: Board = await boardRepository.createBoard(boardDto)
+  const board = await boardRepository.createBoard(boardDto)
 
   if (!board) {
     throw new HttpException(400, 'Bad request')

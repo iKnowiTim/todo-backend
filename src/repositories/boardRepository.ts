@@ -38,7 +38,7 @@ export async function deleteBoardById(id: number): Promise<void> {
   await Board.softRemove(board)
 }
 
-export async function createBoard(boardDto: CreateBoardDto): Promise<any> {
+export async function createBoard(boardDto: CreateBoardDto): Promise<Board> {
   const user = await userRepository.GetUserById(1)
 
   if (!user) {
@@ -62,7 +62,7 @@ export async function createBoard(boardDto: CreateBoardDto): Promise<any> {
 export async function updateBoard(
   id: number,
   boardDto: UpdateBoardDto
-): Promise<any> {
+): Promise<Board> {
   const result = await getRepository(Board)
     .createQueryBuilder()
     .update(Board)
