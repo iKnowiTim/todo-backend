@@ -1,5 +1,6 @@
 import { number } from 'joi'
 import { createQueryBuilder, getRepository } from 'typeorm'
+import { HttpException } from '../common/httpException'
 import {
   CreatedListDto,
   CreateListDto,
@@ -42,30 +43,31 @@ export async function createList(
   boardId: number,
   listDto: CreateListDto
 ): Promise<List> {
-  const list = await BoardRepository.getBoardById(1).then(async (board) => {
-    return await createQueryBuilder('list')
-      .insert()
-      .into(List)
-      .values({
-        title: listDto.title,
-        description: listDto.description,
-        board: board,
-      })
-      .returning('*')
-      .execute()
-      .then((result) => {
-        return result.raw[0]
-      })
-  })
+  const board = await BoardRepository.getBoardById(boardId)
 
-  return list
+  if (!board) {
+    throw new HttpException(404, 'Board not found')
+  }
+
+  const result = await createQueryBuilder('list')
+    .insert()
+    .into(List)
+    .values({
+      title: listDto.title,
+      description: listDto.description,
+      board: board,
+    })
+    .returning('*')
+    .execute()
+
+  return result.raw[0]
 }
 
 export async function updateList(
   id: number,
   listDto: UpdateListDto
 ): Promise<List> {
-  const list = await getRepository(List)
+  const result = await getRepository(List)
     .createQueryBuilder('list')
     .update(List)
     .set({
@@ -76,9 +78,6 @@ export async function updateList(
     .where(`id = ${id}`)
     .returning('*')
     .execute()
-    .then((result) => {
-      return result.raw[0]
-    })
 
-  return list
+  return result.raw[0]
 }
