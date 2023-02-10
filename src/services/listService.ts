@@ -26,12 +26,12 @@ export async function getLists(boardId: number): Promise<GetListsDto[]> {
   return listsDto
 }
 
-export async function getList(boardId: number): Promise<GetListDto> {
-  const list = await listRepository.getListById(boardId)
+export async function getList(id: number): Promise<GetListDto> {
+  const list = await listRepository.getListById(id)
 
   if (!list) {
-    throw new HttpException(404, 'List with id = :boardId not found', {
-      boardId,
+    throw new HttpException(404, 'List with id = :id not found', {
+      id,
     })
   }
 
