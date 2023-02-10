@@ -8,13 +8,13 @@ import { validationMiddleware } from '../middlewares/validationMiddleware'
 import { createBoardSchema, updateBoardSchema } from '../Schemes/boardSchemes'
 
 import * as boardRepository from '../repositories/boardRepository'
-import * as boardsService from '../services/boardService'
+import * as boardService from '../services/boardService'
 
 export const boardsRouter = Router()
 
 boardsRouter.get('/boards', async (req, res, next): Promise<void> => {
   try {
-    const boards = await boardsService.getBoards()
+    const boards = await boardService.getBoards()
     res.send(boards)
   } catch (error) {
     logger.error(error)
@@ -31,7 +31,7 @@ boardsRouter.get('/boards/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    const board = await boardsService.getBoard(id)
+    const board = await boardService.getBoard(id)
     res.send(board)
   } catch (error) {
     next(error)
@@ -45,7 +45,7 @@ boardsRouter.post(
     try {
       const newBoard: CreateBoardDto = req.body
 
-      const created = await boardsService.createBoard(newBoard)
+      const created = await boardService.createBoard(newBoard)
       res.send(created)
     } catch (error) {
       next(error)
@@ -61,7 +61,7 @@ boardsRouter.delete('/boards/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    await boardRepository.deleteBoardById(id)
+    await boardService.removeBoard(id)
     res.send('Board removed')
   } catch (error) {
     logger.error(error)
@@ -80,7 +80,7 @@ boardsRouter.patch(
         throw new HttpException(400, 'Bad request')
       }
 
-      const updated = await boardsService.updateBoard(id, req.body)
+      const updated = await boardService.updateBoard(id, req.body)
       res.send(updated)
     } catch (error) {
       next(error)

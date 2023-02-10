@@ -1,3 +1,4 @@
+import { getRepository } from 'typeorm'
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
 import {
@@ -29,8 +30,7 @@ export async function getBoard(id: number): Promise<GetBoardDto> {
   const board = await boardRepository.getBoardById(id)
 
   if (!board) {
-    logger.error(board)
-    throw new HttpException(404, 'Not found')
+    throw new HttpException(404, 'Board with id = :id not found', { id })
   }
 
   const boardDto = {
@@ -92,4 +92,17 @@ export async function createBoard(
     createdAt: board.createdAt,
     updatedAt: board.updatedAt,
   }
+}
+
+export async function removeBoard(id: number): Promise<void> {
+  const board = await getRepository(Board).findOne(id)
+
+  if (!board) {
+    throw new HttpException(
+      404,
+      'Board with id = :id not found or already deleted',
+      { id }
+    )
+  }
+  await boardRepository.deleteBoardById(board)
 }

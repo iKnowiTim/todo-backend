@@ -32,13 +32,7 @@ export async function getBoardById(id: number): Promise<Board | undefined> {
     .getOne()
 }
 
-export async function deleteBoardById(id: number): Promise<void> {
-  const board = await getRepository(Board).findOne(id)
-
-  if (!board) {
-    throw new HttpException(404, 'not found')
-  }
-
+export async function deleteBoardById(board: Board): Promise<void> {
   await Board.softRemove(board)
 }
 
