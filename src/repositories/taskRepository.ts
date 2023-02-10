@@ -61,7 +61,7 @@ export async function updateTask(
       completed: false,
       updatedAt: new Date(),
     })
-    .where(`id = ${id}`)
+    .where(`id = :id`, { id })
     .returning('*')
     .execute()
 

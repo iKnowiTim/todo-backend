@@ -36,7 +36,7 @@ export async function deleteListById(id: number): Promise<void> {
     .createQueryBuilder()
     .softDelete()
     .from(List)
-    .where(`id = ${id}`)
+    .where(`id = :id`, { id })
     .execute()
 }
 
@@ -70,7 +70,7 @@ export async function updateList(
       description: listDto.description,
       updatedAt: new Date(),
     })
-    .where(`id = ${id}`)
+    .where(`id = :id`, { id })
     .returning('*')
     .execute()
 
