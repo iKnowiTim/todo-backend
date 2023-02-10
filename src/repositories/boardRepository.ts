@@ -14,17 +14,21 @@ type BoardWithCounts = Board & { listsCount: number; tasksCount: number }
 export async function getBoardsWithCount(): Promise<BoardWithCounts[]> {
   return (await getRepository(Board)
     .createQueryBuilder('board')
-    .loadRelationCountAndMap('board.listsCount', 'board.lists')
-    .loadRelationCountAndMap('board.tasksCount', 'board.lists.tasks')
-    .getMany()) as BoardWithCounts[]
+    .select('board.*')
+    .addSelect('count(distinct lists.id)', 'listsCount')
+    .addSelect('count(tasks.id)', 'tasksCount')
+    .leftJoin('board.lists', 'lists')
+    .leftJoin('lists.tasks', 'tasks')
+    .groupBy('board.id')
+    .getRawMany()) as BoardWithCounts[]
 }
 
 export async function getBoardById(id: number): Promise<Board | undefined> {
   return await getRepository(Board)
     .createQueryBuilder('board')
-    .where(`board.id = ${id}`)
-    .leftJoinAndMapMany('board.lists', List, 'list', 'list.boardId = board.id')
-    .leftJoinAndMapMany('list.tasks', Task, 'task', 'task.listId = list.id')
+    .leftJoinAndSelect('board.lists', 'lists')
+    .leftJoinAndSelect('lists.tasks', 'tasks')
+    .where(`board.id = :id`, { id })
     .getOne()
 }
 
