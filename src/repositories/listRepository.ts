@@ -1,16 +1,7 @@
-import { number } from 'joi'
 import { createQueryBuilder, getRepository } from 'typeorm'
-import { HttpException } from '../common/httpException'
-import {
-  CreatedListDto,
-  CreateListDto,
-  GetListDto,
-  UpdateListDto,
-} from '../dto/listsDto'
+import { CreateListDto, UpdateListDto } from '../dto/listsDto'
 import { Board } from '../entities/board'
 import { List } from '../entities/list'
-import { Task } from '../entities/task'
-import * as BoardRepository from './boardRepository'
 
 type ListWithCount = List & { tasksCount: number }
 export async function getLists(boardId: number): Promise<ListWithCount[]> {
@@ -31,13 +22,8 @@ export async function getListById(id: number): Promise<List | undefined> {
     .getOne()
 }
 
-export async function deleteListById(id: number): Promise<void> {
-  await getRepository(List)
-    .createQueryBuilder()
-    .softDelete()
-    .from(List)
-    .where(`id = :id`, { id })
-    .execute()
+export async function removeListById(list: List): Promise<void> {
+  await getRepository(List).softRemove(list)
 }
 
 export async function createList(

@@ -8,6 +8,8 @@ import {
 } from '../dto/listsDto'
 import * as listRepository from '../repositories/listRepository'
 import * as boardRepository from '../repositories/boardRepository'
+import { getRepository } from 'typeorm'
+import { List } from '../entities/list'
 
 export async function getLists(boardId: number): Promise<GetListsDto[]> {
   const lists = await listRepository.getLists(boardId)
@@ -84,4 +86,18 @@ export async function createList(
     createdAt: list.createdAt,
     updatedAt: list.updatedAt,
   }
+}
+
+export async function removeList(id: number): Promise<void> {
+  const list = await getRepository(List).findOne(id)
+
+  if (!list) {
+    throw new HttpException(
+      404,
+      'List with id = :id not found or already deleted',
+      { id }
+    )
+  }
+
+  await listRepository.removeListById(list)
 }

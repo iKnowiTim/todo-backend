@@ -84,13 +84,7 @@ listRouter.delete('/lists/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    const list = await listRepository.getListById(id)
-
-    if (!list) {
-      throw new HttpException(404, 'Not found')
-    }
-
-    await listRepository.deleteListById(id)
+    await listService.removeList(id)
     res.send('list removed')
   } catch (error) {
     logger.error(error)
