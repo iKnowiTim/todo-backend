@@ -32,21 +32,6 @@ export async function createList(list: List): Promise<List> {
   return await getRepository(List).save(list)
 }
 
-export async function updateList(
-  id: number,
-  listDto: UpdateListDto
-): Promise<List> {
-  const result = await getRepository(List)
-    .createQueryBuilder('list')
-    .update(List)
-    .set({
-      title: listDto.title,
-      description: listDto.description,
-      updatedAt: new Date(),
-    })
-    .where(`id = :id`, { id })
-    .returning('*')
-    .execute()
-
-  return result.raw[0]
+export async function updateList(list: List): Promise<List> {
+  return await getRepository(List).save(list)
 }
