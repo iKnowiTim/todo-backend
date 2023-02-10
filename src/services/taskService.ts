@@ -71,6 +71,7 @@ export async function updateTask(
   task.title = taskDto.title ?? dbTask.title
   task.description = taskDto.description ?? dbTask.description
   task.completed = taskDto.completed ?? dbTask.completed
+  task.updatedAt = new Date()
 
   const updated = await taskRepository.updateTask(task)
 

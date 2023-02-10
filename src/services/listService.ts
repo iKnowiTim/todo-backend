@@ -69,6 +69,7 @@ export async function updateList(
 
   list.title = listDto.title ?? dbList.title
   list.description = listDto.description ?? dbList.description
+  list.updatedAt = new Date()
 
   await listRepository.updateList(list)
 

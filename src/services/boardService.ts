@@ -73,6 +73,7 @@ export async function updateBoard(
 
   board.title = boardDto.title ?? dbBoard.title
   board.description = boardDto.description ?? dbBoard.description
+  board.updatedAt = new Date()
 
   const updated = await boardRepository.updateBoard(board)
 
