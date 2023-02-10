@@ -1,5 +1,21 @@
 import * as dotenv from 'dotenv'
 
-export function initDataSettingsEnv() {
-  dotenv.config()
+dotenv.config()
+
+export interface Settings {
+  port: number
+  database: string
+  dbHost: string
+  dbPort: number
+  dbName: string
+  dbPassword: string
+}
+
+export const settings: Settings = {
+  port: parseInt(process.env.PORT ?? '3000'),
+  database: process.env.DB_DATABASE ?? 'todo-backend',
+  dbHost: process.env.DB_HOST ?? 'localhost',
+  dbPort: parseInt(process.env.DB_PORT ?? '5432'),
+  dbName: process.env.DB_USERNAME ?? 'tim',
+  dbPassword: process.env.DB_PASSWORD ?? '76543219q',
 }

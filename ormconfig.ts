@@ -1,10 +1,12 @@
+import { settings } from './src/common/settings'
+
 export = {
   type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  database: 'todo-backend',
-  username: 'tim',
-  password: '76543219q',
+  host: settings.dbHost,
+  port: settings.dbPort,
+  database: settings.database,
+  username: settings.dbName,
+  password: settings.dbPassword,
   logging: true,
   synchronize: false,
   entities: ['./src/entities/*.ts'],
