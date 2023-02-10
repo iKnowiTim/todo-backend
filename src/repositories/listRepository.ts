@@ -16,9 +16,9 @@ type ListWithCount = List & { tasksCount: number }
 export async function getLists(boardId: number): Promise<ListWithCount[]> {
   return (await getRepository(List)
     .createQueryBuilder('list')
-    .select('list.*', 'id')
-    .addSelect('count(task.id)', 'tasksCount')
-    .leftJoin('task', 'list.tasks = task.listId')
+    .select('list.*')
+    .addSelect('count(tasks.id)', 'tasksCount')
+    .leftJoin('list.tasks', 'tasks')
     .groupBy('list.id')
     .getRawMany()) as ListWithCount[]
 }
@@ -26,9 +26,8 @@ export async function getLists(boardId: number): Promise<ListWithCount[]> {
 export async function getListById(id: number): Promise<List | undefined> {
   return await getRepository(List)
     .createQueryBuilder('list')
-    .leftJoinAndMapMany('list.tasks', Task, 'task', 'task.listId = list.id')
-    .where(`list.id = ${id}`)
-    .andWhere('list.deletedAt is not null')
+    .leftJoinAndSelect('list.tasks', 'tasks')
+    .where(`list.id = :id`, { id })
     .getOne()
 }
 
