@@ -40,21 +40,6 @@ export async function createBoard(board: Board): Promise<Board> {
   return await getRepository(Board).save(board)
 }
 
-export async function updateBoard(
-  id: number,
-  boardDto: UpdateBoardDto
-): Promise<Board> {
-  const result = await getRepository(Board)
-    .createQueryBuilder()
-    .update(Board)
-    .set({
-      title: boardDto.title,
-      description: boardDto.description,
-      updatedAt: new Date(),
-    })
-    .where(`id = :id`, { id })
-    .returning('*')
-    .execute()
-
-  return result.raw[0]
+export async function updateBoard(board: Board): Promise<Board> {
+  return await getRepository(Board).save(board)
 }

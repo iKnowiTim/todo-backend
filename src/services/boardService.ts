@@ -63,17 +63,24 @@ export async function updateBoard(
   id: number,
   boardDto: UpdateBoardDto
 ): Promise<UpdatedBoardDto> {
-  const board = await boardRepository.updateBoard(id, boardDto)
+  const dbBoard = await getRepository(Board).findOne(id)
 
-  if (!board) {
-    throw new HttpException(404, 'not found')
+  if (!dbBoard) {
+    throw new HttpException(404, 'Board with id = :id not found', { id })
   }
 
+  const board = new Board(dbBoard)
+
+  board.title = boardDto.title ?? dbBoard.title
+  board.description = boardDto.description ?? dbBoard.description
+
+  const updated = await boardRepository.updateBoard(board)
+
   return {
-    id: board.id,
-    title: board.title,
-    description: board.description,
-    updatedAt: board.updatedAt,
+    id: updated.id,
+    title: updated.title,
+    description: updated.description,
+    updatedAt: updated.updatedAt,
   }
 }
 
