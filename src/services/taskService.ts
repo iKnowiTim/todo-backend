@@ -60,14 +60,26 @@ export async function updateTask(
   id: number,
   taskDto: UpdateTaskDto
 ): Promise<UpdatedTaskDto> {
-  const task = await taskRepository.updateTask(id, taskDto)
+  const dbTask = await getRepository(Task).findOne(id)
+
+  if (!dbTask) {
+    throw new HttpException(404, 'Task with id = :id not found', { id })
+  }
+
+  const task = new Task(dbTask)
+
+  task.title = taskDto.title ?? dbTask.title
+  task.description = taskDto.description ?? dbTask.description
+  task.completed = taskDto.completed ?? dbTask.completed
+
+  const updated = await taskRepository.updateTask(task)
 
   return {
-    id: task.id,
-    title: task.title,
-    description: task.description,
-    completed: task.completed,
-    updatedAt: task.updatedAt,
+    id: updated.id,
+    title: updated.title,
+    description: updated.description,
+    completed: updated.completed,
+    updatedAt: updated.updatedAt,
   }
 }
 

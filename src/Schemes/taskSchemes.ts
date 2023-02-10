@@ -8,4 +8,5 @@ export const createTaskSchema = Joi.object({
 export const updateTaskSchema = Joi.object({
   title: Joi.string().min(3).max(30).optional(),
   description: Joi.string().max(100).optional(),
+  completed: Joi.boolean().optional(),
 })

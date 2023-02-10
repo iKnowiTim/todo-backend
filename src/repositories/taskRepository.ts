@@ -26,22 +26,6 @@ export async function createTask(task: Task): Promise<Task> {
   return await getRepository(Task).save(task)
 }
 
-export async function updateTask(
-  id: number,
-  taskDto: UpdateTaskDto
-): Promise<Task> {
-  const result = await getRepository(Task)
-    .createQueryBuilder('task')
-    .update(Task)
-    .set({
-      title: taskDto.title,
-      description: taskDto.description,
-      completed: false,
-      updatedAt: new Date(),
-    })
-    .where(`id = :id`, { id })
-    .returning('*')
-    .execute()
-
-  return result.raw[0]
+export async function updateTask(task: Task): Promise<Task> {
+  return await getRepository(Task).save(task)
 }
