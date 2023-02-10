@@ -12,9 +12,10 @@ export async function getTasks(): Promise<Task[]> {
 export async function getTaskById(listId: number): Promise<Task[] | undefined> {
   return await getRepository(Task)
     .createQueryBuilder('task')
-    .leftJoinAndSelect(List, 'list', 'list.id = task.listId')
-    .where(`list.id = ${listId}`)
-    .getMany()
+    .select('task.*')
+    .leftJoin('task.list', 'lists')
+    .where(`lists.id = :listId`, { listId })
+    .getRawMany()
 }
 
 export async function deleteTaskById(id: number): Promise<void> {
