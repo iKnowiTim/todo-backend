@@ -36,25 +36,8 @@ export async function deleteBoardById(board: Board): Promise<void> {
   await Board.softRemove(board)
 }
 
-export async function createBoard(boardDto: CreateBoardDto): Promise<Board> {
-  const user = await userRepository.GetUserById(1)
-
-  if (!user) {
-    throw new HttpException(404, 'not found')
-  }
-
-  const result = await createQueryBuilder()
-    .insert()
-    .into(Board)
-    .values({
-      title: boardDto.title,
-      description: boardDto.description,
-      user: user,
-    })
-    .returning('*')
-    .execute()
-
-  return result.raw[0]
+export async function createBoard(board: Board): Promise<Board> {
+  return await getRepository(Board).save(board)
 }
 
 export async function updateBoard(
