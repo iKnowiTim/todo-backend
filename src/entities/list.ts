@@ -16,6 +16,10 @@ import { Task } from './task'
 
 @Entity()
 export class List extends BaseEntity {
+  constructor(list: Partial<List>) {
+    super()
+    Object.assign(this, list)
+  }
   @PrimaryGeneratedColumn()
   id: number
 
