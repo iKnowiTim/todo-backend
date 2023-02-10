@@ -10,6 +10,8 @@ export async function getLists(boardId: number): Promise<ListWithCount[]> {
     .select('list.*')
     .addSelect('count(tasks.id)', 'tasksCount')
     .leftJoin('list.tasks', 'tasks')
+    .leftJoin('list.board', 'board')
+    .where('board.id = :boardId', { boardId })
     .groupBy('list.id')
     .getRawMany()) as ListWithCount[]
 }

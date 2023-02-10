@@ -21,7 +21,7 @@ listRouter.get('/boards/:id/lists', async (req, res, next): Promise<void> => {
     const board = await BoardRepository.getBoardById(id)
 
     if (!board) {
-      throw new HttpException(404, `Board is Not Found with id = ${id}`)
+      throw new HttpException(404, `Board is Not Found with id = :id`, { id })
     }
 
     const lists = await listService.getLists(id)
