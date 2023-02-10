@@ -6,7 +6,7 @@ import { validationMiddleware } from '../middlewares/validationMiddleware'
 import * as BoardRepository from '../repositories/boardRepository'
 import * as listRepository from '../repositories/listRepository'
 import { createListSchema } from '../Schemes/listSchemes'
-import { ListService } from '../services/listService'
+import * as listService from '../services/listService'
 
 export const listRouter = Router()
 
@@ -24,7 +24,7 @@ listRouter.get('/boards/:id/lists', async (req, res, next): Promise<void> => {
       throw new HttpException(404, `Board is Not Found with id = ${id}`)
     }
 
-    const lists = await ListService.getLists(id)
+    const lists = await listService.getLists(id)
     res.send(lists)
   } catch (error) {
     logger.error(error)
@@ -40,7 +40,7 @@ listRouter.get('/lists/:id', async (req, res, next): Promise<void> => {
       throw new HttpException(400, 'Bad request')
     }
 
-    const list = await ListService.getList(id)
+    const list = await listService.getList(id)
     res.send(list)
   } catch (error) {
     logger.error(error)
@@ -67,7 +67,7 @@ listRouter.post(
 
       const listDto: CreateListDto = req.body
 
-      const list = await ListService.createList(id, listDto)
+      const list = await listService.createList(id, listDto)
       res.send(list)
     } catch (error) {
       logger.error(error)
@@ -114,7 +114,7 @@ listRouter.patch('/lists/:id', async (req, res, next): Promise<void> => {
 
     const listDto: CreateListDto = req.body
 
-    const updated = await ListService.updateList(id, listDto)
+    const updated = await listService.updateList(id, listDto)
     res.send(updated)
   } catch (error) {
     logger.error(error)
