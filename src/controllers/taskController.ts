@@ -21,7 +21,9 @@ taskRouter.get('/lists/:id/tasks', async (req, res, next): Promise<void> => {
     const list = await listRepository.getListById(listId)
 
     if (!list) {
-      throw new HttpException(404, 'not found')
+      throw new HttpException(404, 'List with id = :listId not found', {
+        listId,
+      })
     }
 
     const task = await taskService.getTasks(listId)

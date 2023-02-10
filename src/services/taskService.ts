@@ -13,10 +13,6 @@ import * as taskRepository from '../repositories/taskRepository'
 export async function getTasks(listId: number): Promise<GetTasksDto[]> {
   const tasks = await taskRepository.getTaskById(listId)
 
-  if (!tasks) {
-    throw new HttpException(404, 'not found')
-  }
-
   return tasks.map((task) => ({
     id: task.id,
     title: task.title,

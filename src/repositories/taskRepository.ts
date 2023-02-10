@@ -9,7 +9,7 @@ export async function getTasks(): Promise<Task[]> {
   return await getRepository(Task).find()
 }
 
-export async function getTaskById(listId: number): Promise<Task[] | undefined> {
+export async function getTaskById(listId: number): Promise<Task[]> {
   return await getRepository(Task)
     .createQueryBuilder('task')
     .select('task.*')
