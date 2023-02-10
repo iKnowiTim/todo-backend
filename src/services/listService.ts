@@ -1,6 +1,7 @@
 import { HttpException } from '../common/httpException'
 import {
   CreatedListDto,
+  CreateListDto,
   GetListDto,
   GetListsDto,
   UpdatedListDto,
@@ -69,22 +70,30 @@ export async function updateList(
 
 export async function createList(
   boardId: number,
-  listDto: UpdateListDto
+  listDto: CreateListDto
 ): Promise<CreatedListDto> {
   const board = await boardRepository.getBoardById(boardId)
 
   if (!board) {
-    throw new HttpException(404, 'Board not found')
+    throw new HttpException(404, 'Board with id = :boardId not found', {
+      boardId,
+    })
   }
 
-  const list = await listRepository.createList(boardId, listDto)
+  const list = new List({
+    title: listDto.title,
+    description: listDto.description,
+    board: board,
+  })
+
+  const created = await listRepository.createList(list)
 
   return {
-    id: list.id,
-    title: list.title,
-    description: list.description,
-    createdAt: list.createdAt,
-    updatedAt: list.updatedAt,
+    id: created.id,
+    title: created.title,
+    description: created.description,
+    createdAt: created.createdAt,
+    updatedAt: created.updatedAt,
   }
 }
 

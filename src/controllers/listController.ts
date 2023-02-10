@@ -59,12 +59,6 @@ listRouter.post(
         throw new HttpException(400, 'Bad request')
       }
 
-      const board = await BoardRepository.getBoardById(id)
-
-      if (!board) {
-        throw new HttpException(404, `Board is Not Found with id = ${id}`)
-      }
-
       const listDto: CreateListDto = req.body
 
       const list = await listService.createList(id, listDto)

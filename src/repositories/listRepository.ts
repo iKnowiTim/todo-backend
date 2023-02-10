@@ -28,22 +28,8 @@ export async function removeListById(list: List): Promise<void> {
   await getRepository(List).softRemove(list)
 }
 
-export async function createList(
-  boardId: number,
-  listDto: CreateListDto
-): Promise<List> {
-  const result = await createQueryBuilder('list')
-    .insert()
-    .into(List)
-    .values({
-      title: listDto.title,
-      description: listDto.description,
-      board: new Board({ id: boardId }),
-    })
-    .returning('*')
-    .execute()
-
-  return result.raw[0]
+export async function createList(list: List): Promise<List> {
+  return await getRepository(List).save(list)
 }
 
 export async function updateList(
