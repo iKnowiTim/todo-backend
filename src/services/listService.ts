@@ -11,6 +11,7 @@ import * as listRepository from '../repositories/listRepository'
 import * as boardRepository from '../repositories/boardRepository'
 import { getRepository } from 'typeorm'
 import { List } from '../entities/list'
+import { Board } from '../entities/board'
 
 export async function getLists(boardId: number): Promise<GetListsDto[]> {
   const lists = await listRepository.getLists(boardId)
@@ -83,7 +84,7 @@ export async function createList(
   boardId: number,
   listDto: CreateListDto
 ): Promise<CreatedListDto> {
-  const board = await boardRepository.getBoardById(boardId)
+  const board = await getRepository(Board).findOne(boardId)
 
   if (!board) {
     throw new HttpException(404, 'Board with id = :boardId not found', {

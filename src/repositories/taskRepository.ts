@@ -28,24 +28,8 @@ export async function deleteTaskById(id: number): Promise<void> {
   await Task.softRemove(task)
 }
 
-export async function createTask(
-  listId: number,
-  taskDto: CreateTaskDto
-): Promise<Task> {
-  const list = await listRepository.getListById(listId)
-  const result = await createQueryBuilder('task')
-    .insert()
-    .into(Task)
-    .values({
-      title: taskDto.title,
-      description: taskDto.description,
-      completed: false,
-      list: list,
-    })
-    .returning('*')
-    .execute()
-
-  return result.raw[0]
+export async function createTask(task: Task): Promise<Task> {
+  return await getRepository(Task).save(task)
 }
 
 export async function updateTask(

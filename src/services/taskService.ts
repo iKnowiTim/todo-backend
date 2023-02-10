@@ -1,3 +1,4 @@
+import { getRepository } from 'typeorm'
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
 import {
@@ -7,6 +8,7 @@ import {
   UpdatedTaskDto,
   UpdateTaskDto,
 } from '../dto/tasksDto'
+import { List } from '../entities/list'
 import { Task } from '../entities/task'
 import * as taskRepository from '../repositories/taskRepository'
 
@@ -27,14 +29,30 @@ export async function createTask(
   listId: number,
   taskDto: CreateTaskDto
 ): Promise<CreatedTaskDto> {
-  const task = await taskRepository.createTask(listId, taskDto)
+  const list = await getRepository(List).findOne(listId)
+
+  if (!list) {
+    throw new HttpException(404, 'List with id = :listId not found', {
+      listId,
+    })
+  }
+
+  const task = new Task({
+    title: taskDto.title,
+    description: taskDto.description,
+    completed: false,
+    list: list,
+  })
+
+  const created = await taskRepository.createTask(task)
 
   return {
-    id: task.id,
-    title: task.title,
-    description: task.description,
-    createdAt: task.createdAt,
-    updatedAt: task.updatedAt,
+    id: created.id,
+    title: created.title,
+    completed: created.completed,
+    description: created.description,
+    createdAt: created.createdAt,
+    updatedAt: created.updatedAt,
   }
 }
 
@@ -48,6 +66,7 @@ export async function updateTask(
     id: task.id,
     title: task.title,
     description: task.description,
+    completed: task.completed,
     updatedAt: task.updatedAt,
   }
 }
