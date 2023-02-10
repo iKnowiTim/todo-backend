@@ -70,3 +70,17 @@ export async function updateTask(
     updatedAt: task.updatedAt,
   }
 }
+
+export async function removeTask(id: number): Promise<void> {
+  const task = await getRepository(Task).findOne(id)
+
+  if (!task) {
+    throw new HttpException(
+      404,
+      'Task with id = :id not found or already deleted',
+      { id }
+    )
+  }
+
+  await taskRepository.removeTask(task)
+}

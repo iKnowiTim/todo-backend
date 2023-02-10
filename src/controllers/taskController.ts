@@ -60,7 +60,7 @@ taskRouter.delete('/tasks/:id', async (req, res, next): Promise<void> => {
   try {
     const id = parseInt(req.params.id)
 
-    await taskRepository.deleteTaskById(id)
+    await taskService.removeTask(id)
     res.send('Task removed')
   } catch (error) {
     logger.error(error)

@@ -18,13 +18,7 @@ export async function getTaskById(listId: number): Promise<Task[]> {
     .getRawMany()
 }
 
-export async function deleteTaskById(id: number): Promise<void> {
-  const task = await getRepository(Task).findOne(id)
-
-  if (!task) {
-    throw new HttpException(404, 'Not found')
-  }
-
+export async function removeTask(task: Task): Promise<void> {
   await Task.softRemove(task)
 }
 
