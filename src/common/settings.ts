@@ -9,6 +9,7 @@ export interface Settings {
   dbPort: number
   dbName: string
   dbPassword: string
+  saltRounds: number
 }
 
 export const settings: Settings = {
@@ -18,4 +19,5 @@ export const settings: Settings = {
   dbPort: parseInt(process.env.DB_PORT ?? '5432'),
   dbName: process.env.DB_USERNAME ?? 'tim',
   dbPassword: process.env.DB_PASSWORD ?? '76543219q',
+  saltRounds: parseInt(process.env.SALT_ROUNDS ?? '8'),
 }

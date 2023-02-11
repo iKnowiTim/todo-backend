@@ -7,7 +7,6 @@ import {
 } from '../dto/boardsDto'
 import { List } from '../entities/list'
 import { Task } from '../entities/task'
-import { userRepository } from './userRepository'
 import { HttpException } from '../common/httpException'
 
 type BoardWithCounts = Board & { listsCount: number; tasksCount: number }

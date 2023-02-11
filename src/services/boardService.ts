@@ -11,7 +11,7 @@ import {
 } from '../dto/boardsDto'
 import { Board } from '../entities/board'
 import * as boardRepository from '../repositories/boardRepository'
-import { userRepository } from '../repositories/userRepository'
+import * as userRepository from '../repositories/userRepository'
 
 export async function getBoards(): Promise<GetBoardCountDto[]> {
   const boards = await boardRepository.getBoardsWithCount()
@@ -88,7 +88,7 @@ export async function updateBoard(
 export async function createBoard(
   boardDto: CreateBoardDto
 ): Promise<CreatedBoardDto> {
-  const user = await userRepository.GetUserById(1)
+  const user = await userRepository.getUserById(1)
 
   if (!user) {
     throw new HttpException(404, 'User with id = 1 not found')
