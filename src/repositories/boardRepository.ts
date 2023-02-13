@@ -25,12 +25,16 @@ export async function getBoardsWithCount(
     .getRawMany()) as BoardWithCounts[]
 }
 
-export async function getBoardById(id: number): Promise<Board | undefined> {
+export async function getBoardById(
+  id: number,
+  userId: number
+): Promise<Board | undefined> {
   return await getRepository(Board)
     .createQueryBuilder('board')
     .leftJoinAndSelect('board.lists', 'lists')
     .leftJoinAndSelect('lists.tasks', 'tasks')
     .where(`board.id = :id`, { id })
+    .andWhere('board.user = :userId', { userId })
     .getOne()
 }
 

@@ -39,7 +39,7 @@ boardsRouter.get(
         throw new HttpException(400, 'Bad request')
       }
 
-      const board = await boardService.getBoard(id)
+      const board = await boardService.getBoard(id, req.user)
       res.send(board)
     } catch (error) {
       next(error)

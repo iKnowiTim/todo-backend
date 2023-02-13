@@ -30,8 +30,11 @@ export async function getBoards(
   }))
 }
 
-export async function getBoard(id: number): Promise<GetBoardDto> {
-  const board = await boardRepository.getBoardById(id)
+export async function getBoard(
+  id: number,
+  payload: PayloadDto
+): Promise<GetBoardDto> {
+  const board = await boardRepository.getBoardById(id, payload.id)
 
   if (!board) {
     throw new HttpException(404, 'Board with id = :id not found', { id })
