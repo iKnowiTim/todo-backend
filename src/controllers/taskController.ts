@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
 import { CreateTaskDto } from '../dto/tasksDto'
+import { authMiddleware } from '../middlewares/authMiddleware'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import * as listRepository from '../repositories/listRepository'
 import * as taskRepository from '../repositories/taskRepository'
@@ -36,6 +37,7 @@ taskRouter.get('/lists/:id/tasks', async (req, res, next): Promise<void> => {
 
 taskRouter.post(
   '/lists/:id/tasks',
+  authMiddleware,
   validationMiddleware(createTaskSchema),
   async (req, res, next): Promise<void> => {
     try {
@@ -56,20 +58,25 @@ taskRouter.post(
   }
 )
 
-taskRouter.delete('/tasks/:id', async (req, res, next): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
+taskRouter.delete(
+  '/tasks/:id',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id)
 
-    await taskService.removeTask(id)
-    res.send('Task removed')
-  } catch (error) {
-    logger.error(error)
-    next(error)
+      await taskService.removeTask(id)
+      res.send('Task removed')
+    } catch (error) {
+      logger.error(error)
+      next(error)
+    }
   }
-})
+)
 
 taskRouter.patch(
   '/tasks/:id',
+  authMiddleware,
   validationMiddleware(updateTaskSchema),
   async (req, res, next): Promise<void> => {
     try {

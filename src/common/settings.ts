@@ -10,6 +10,7 @@ export interface Settings {
   dbName: string
   dbPassword: string
   saltRounds: number
+  secretKey: string
 }
 
 export const settings: Settings = {
@@ -20,4 +21,5 @@ export const settings: Settings = {
   dbName: process.env.DB_USERNAME ?? 'tim',
   dbPassword: process.env.DB_PASSWORD ?? '76543219q',
   saltRounds: parseInt(process.env.SALT_ROUNDS ?? '8'),
+  secretKey: process.env.SECRET_KEY ?? 'SECRET_KEY_RANDOM',
 }

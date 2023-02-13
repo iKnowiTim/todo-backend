@@ -9,6 +9,7 @@ import { createBoardSchema, updateBoardSchema } from '../Schemes/boardSchemes'
 
 import * as boardRepository from '../repositories/boardRepository'
 import * as boardService from '../services/boardService'
+import { authMiddleware } from '../middlewares/authMiddleware'
 
 export const boardsRouter = Router()
 
@@ -40,6 +41,7 @@ boardsRouter.get('/boards/:id', async (req, res, next): Promise<void> => {
 
 boardsRouter.post(
   '/boards',
+  authMiddleware,
   validationMiddleware(createBoardSchema),
   async (req, res, next): Promise<void> => {
     try {
@@ -53,24 +55,29 @@ boardsRouter.post(
   }
 )
 
-boardsRouter.delete('/boards/:id', async (req, res, next): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
-    if (isNaN(id)) {
-      logger.error('id is not valid')
-      throw new HttpException(400, 'Bad request')
-    }
+boardsRouter.delete(
+  '/boards/:id',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id)
+      if (isNaN(id)) {
+        logger.error('id is not valid')
+        throw new HttpException(400, 'Bad request')
+      }
 
-    await boardService.removeBoard(id)
-    res.send('Board removed')
-  } catch (error) {
-    logger.error(error)
-    next(error)
+      await boardService.removeBoard(id)
+      res.send('Board removed')
+    } catch (error) {
+      logger.error(error)
+      next(error)
+    }
   }
-})
+)
 
 boardsRouter.patch(
   '/boards/:id',
+  authMiddleware,
   validationMiddleware(updateBoardSchema),
   async (req, res, next): Promise<void> => {
     try {

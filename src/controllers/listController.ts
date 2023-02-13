@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { HttpException } from '../common/httpException'
 import { logger } from '../common/logger'
 import { CreateListDto } from '../dto/listsDto'
+import { authMiddleware } from '../middlewares/authMiddleware'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
 import * as BoardRepository from '../repositories/boardRepository'
 import * as listRepository from '../repositories/listRepository'
@@ -50,6 +51,7 @@ listRouter.get('/lists/:id', async (req, res, next): Promise<void> => {
 
 listRouter.post(
   '/boards/:id/lists',
+  authMiddleware,
   validationMiddleware(createListSchema),
   async (req, res, next): Promise<void> => {
     try {
@@ -70,24 +72,29 @@ listRouter.post(
   }
 )
 
-listRouter.delete('/lists/:id', async (req, res, next): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
+listRouter.delete(
+  '/lists/:id',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id)
 
-    if (isNaN(id)) {
-      throw new HttpException(400, 'Bad request')
+      if (isNaN(id)) {
+        throw new HttpException(400, 'Bad request')
+      }
+
+      await listService.removeList(id)
+      res.send('list removed')
+    } catch (error) {
+      logger.error(error)
+      next(error)
     }
-
-    await listService.removeList(id)
-    res.send('list removed')
-  } catch (error) {
-    logger.error(error)
-    next(error)
   }
-})
+)
 
 listRouter.patch(
   '/lists/:id',
+  authMiddleware,
   validationMiddleware(updateListSchema),
   async (req, res, next): Promise<void> => {
     try {

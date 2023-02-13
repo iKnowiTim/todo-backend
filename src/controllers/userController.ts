@@ -1,8 +1,10 @@
 import { Router } from 'express'
 import { validationMiddleware } from '../middlewares/validationMiddleware'
-import { signUpScheme } from '../Schemes/userSchemes'
-import { SignUpDto } from '../dto/userDto'
+import { loginScheme, signUpScheme } from '../Schemes/userSchemes'
+import { LoginDto, SignUpDto } from '../dto/userDto'
 import * as userService from '../services/userService'
+import { authMiddleware } from '../middlewares/authMiddleware'
+import { HttpException } from '../common/httpException'
 
 export const userRouter = Router()
 
@@ -22,4 +24,31 @@ userRouter.post(
   }
 )
 
-userRouter.post('/auth', async (req, res, next): Promise<void> => {})
+userRouter.post(
+  '/auth/login',
+  validationMiddleware(loginScheme),
+  async (req, res, next): Promise<void> => {
+    try {
+      const loginDto: LoginDto = req.body
+
+      const token = await userService.login(loginDto)
+
+      res.send(token)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
+userRouter.get(
+  '/auth/me',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const user = await userService.me(req.user)
+      res.send(user)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
