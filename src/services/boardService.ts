@@ -11,6 +11,7 @@ import {
 } from '../dto/boardsDto'
 import { PayloadDto } from '../dto/userDto'
 import { Board } from '../entities/board'
+import { User } from '../entities/user'
 import * as boardRepository from '../repositories/boardRepository'
 import * as userRepository from '../repositories/userRepository'
 
@@ -92,18 +93,13 @@ export async function updateBoard(
 }
 
 export async function createBoard(
-  boardDto: CreateBoardDto
+  boardDto: CreateBoardDto,
+  payload: PayloadDto
 ): Promise<CreatedBoardDto> {
-  const user = await userRepository.getUserById(1)
-
-  if (!user) {
-    throw new HttpException(404, 'User with id = 1 not found')
-  }
-
   const board = new Board({
     title: boardDto.title,
     description: boardDto.description,
-    user: user,
+    user: new User({ id: payload.id }),
   })
 
   const created = await boardRepository.createBoard(board)

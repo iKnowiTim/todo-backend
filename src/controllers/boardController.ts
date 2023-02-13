@@ -55,7 +55,7 @@ boardsRouter.post(
     try {
       const newBoard: CreateBoardDto = req.body
 
-      const created = await boardService.createBoard(newBoard)
+      const created = await boardService.createBoard(newBoard, req.user)
       res.send(created)
     } catch (error) {
       next(error)
