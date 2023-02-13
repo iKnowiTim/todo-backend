@@ -113,15 +113,21 @@ export async function createBoard(
   }
 }
 
-export async function removeBoard(id: number): Promise<void> {
-  const board = await getRepository(Board).findOne(id)
-
-  if (!board) {
+export async function removeBoard(
+  id: number,
+  payload: PayloadDto
+): Promise<void> {
+  try {
+    const board = await getRepository(Board)
+      .createQueryBuilder()
+      .where('board.user = :id', { id: payload.id })
+      .getOneOrFail()
+    await boardRepository.deleteBoardById(board)
+  } catch (error) {
     throw new HttpException(
       404,
       'Board with id = :id not found or already deleted',
       { id }
     )
   }
-  await boardRepository.deleteBoardById(board)
 }

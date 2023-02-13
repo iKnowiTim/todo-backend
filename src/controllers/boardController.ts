@@ -74,10 +74,9 @@ boardsRouter.delete(
         throw new HttpException(400, 'Bad request')
       }
 
-      await boardService.removeBoard(id)
+      await boardService.removeBoard(id, req.user)
       res.send('Board removed')
     } catch (error) {
-      logger.error(error)
       next(error)
     }
   }
