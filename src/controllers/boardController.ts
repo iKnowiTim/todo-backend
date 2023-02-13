@@ -13,31 +13,39 @@ import { authMiddleware } from '../middlewares/authMiddleware'
 
 export const boardsRouter = Router()
 
-boardsRouter.get('/boards', async (req, res, next): Promise<void> => {
-  try {
-    const boards = await boardService.getBoards()
-    res.send(boards)
-  } catch (error) {
-    logger.error(error)
-    next()
-  }
-})
-
-boardsRouter.get('/boards/:id', async (req, res, next): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
-
-    if (isNaN(id)) {
-      logger.error('id is not valid')
-      throw new HttpException(400, 'Bad request')
+boardsRouter.get(
+  '/boards',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const boards = await boardService.getBoards(req.user)
+      res.send(boards)
+    } catch (error) {
+      logger.error(error)
+      next()
     }
-
-    const board = await boardService.getBoard(id)
-    res.send(board)
-  } catch (error) {
-    next(error)
   }
-})
+)
+
+boardsRouter.get(
+  '/boards/:id',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id)
+
+      if (isNaN(id)) {
+        logger.error('id is not valid')
+        throw new HttpException(400, 'Bad request')
+      }
+
+      const board = await boardService.getBoard(id)
+      res.send(board)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 
 boardsRouter.post(
   '/boards',

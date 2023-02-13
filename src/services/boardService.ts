@@ -9,12 +9,15 @@ import {
   UpdateBoardDto,
   UpdatedBoardDto,
 } from '../dto/boardsDto'
+import { PayloadDto } from '../dto/userDto'
 import { Board } from '../entities/board'
 import * as boardRepository from '../repositories/boardRepository'
 import * as userRepository from '../repositories/userRepository'
 
-export async function getBoards(): Promise<GetBoardCountDto[]> {
-  const boards = await boardRepository.getBoardsWithCount()
+export async function getBoards(
+  payload: PayloadDto
+): Promise<GetBoardCountDto[]> {
+  const boards = await boardRepository.getBoardsWithCount(payload.id)
 
   return boards.map((board) => ({
     id: board.id,
