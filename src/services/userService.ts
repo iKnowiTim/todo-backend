@@ -1,6 +1,12 @@
 import { getRepository } from 'typeorm'
 import { HttpException } from '../common/httpException'
-import { LoginDto, PayloadDto, SignUpDto, UserDto } from '../dto/userDto'
+import {
+  LoginDto,
+  PayloadDto,
+  SignUpDto,
+  TokenDto,
+  UserDto,
+} from '../dto/userDto'
 import { User } from '../entities/user'
 import bcrypt from 'bcrypt'
 import { settings } from '../common/settings'
@@ -26,7 +32,7 @@ export async function signUp(userDto: SignUpDto): Promise<void> {
   await userRepository.createUser(user)
 }
 
-export async function login(userDto: LoginDto): Promise<string> {
+export async function login(userDto: LoginDto): Promise<TokenDto> {
   const user = await checkUserExistsLogin(userDto)
 
   if (!user) {
@@ -43,8 +49,9 @@ export async function login(userDto: LoginDto): Promise<string> {
   }
 
   const token = generateAccessToken(user.id, user.username)
-  logger.info(token)
-  return token
+  return {
+    token,
+  }
 }
 
 export async function me(payloadDto: PayloadDto): Promise<UserDto> {

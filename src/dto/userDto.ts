@@ -21,3 +21,7 @@ export interface UserDto {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface TokenDto {
+  token: string
+}
