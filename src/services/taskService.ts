@@ -31,9 +31,15 @@ export async function getTasks(
 
 export async function createTask(
   listId: number,
-  taskDto: CreateTaskDto
+  taskDto: CreateTaskDto,
+  payload: PayloadDto
 ): Promise<CreatedTaskDto> {
-  const list = await getRepository(List).findOne(listId)
+  const list = await getRepository(List)
+    .createQueryBuilder('list')
+    .leftJoin('list.board', 'board')
+    .where('board.user = :userId', { userId: payload.id })
+    .andWhere('list.id = :listId', { listId })
+    .getOne()
 
   if (!list) {
     throw new HttpException(404, 'List with id = :listId not found', {

@@ -45,10 +45,9 @@ taskRouter.post(
 
       const listDto: CreateTaskDto = req.body
 
-      const created = await taskService.createTask(listId, listDto)
+      const created = await taskService.createTask(listId, listDto, req.user)
       res.send(created)
     } catch (error) {
-      logger.error(error)
       next(error)
     }
   }
