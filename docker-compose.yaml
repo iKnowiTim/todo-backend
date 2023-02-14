@@ -1,0 +1,12 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:11.5
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=todo
+      - POSTGRES_DB=todo
+      - POSTGRES_PASSWORD=todo
+    volumes:
+      - ./.postgres-volume:/var/lib/postgresql/data
