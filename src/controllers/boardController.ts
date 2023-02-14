@@ -70,7 +70,6 @@ boardsRouter.delete(
     try {
       const id = parseInt(req.params.id)
       if (isNaN(id)) {
-        logger.error('id is not valid')
         throw new HttpException(400, 'Bad request')
       }
 
@@ -90,11 +89,10 @@ boardsRouter.patch(
     try {
       const id = parseInt(req.params.id)
       if (isNaN(id)) {
-        logger.error('id is not valid')
         throw new HttpException(400, 'Bad request')
       }
 
-      const updated = await boardService.updateBoard(id, req.body)
+      const updated = await boardService.updateBoard(id, req.body, req.user)
       res.send(updated)
     } catch (error) {
       next(error)

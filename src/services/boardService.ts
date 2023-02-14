@@ -68,13 +68,17 @@ export async function getBoard(
 
 export async function updateBoard(
   id: number,
-  boardDto: UpdateBoardDto
+  boardDto: UpdateBoardDto,
+  payload: PayloadDto
 ): Promise<UpdatedBoardDto> {
-  const dbBoard = await getRepository(Board).findOne(id)
-
-  if (!dbBoard) {
-    throw new HttpException(404, 'Board with id = :id not found', { id })
-  }
+  const dbBoard = await getRepository(Board)
+    .createQueryBuilder('board')
+    .where('board.user = :userId', { userId: payload.id })
+    .andWhere('board.id = :id', { id })
+    .getOneOrFail()
+    .catch((error) => {
+      throw new HttpException(404, 'Board with id = :id not found', { id })
+    })
 
   const board = new Board(dbBoard)
 
@@ -117,17 +121,17 @@ export async function removeBoard(
   id: number,
   payload: PayloadDto
 ): Promise<void> {
-  try {
-    const board = await getRepository(Board)
-      .createQueryBuilder()
-      .where('board.user = :id', { id: payload.id })
-      .getOneOrFail()
-    await boardRepository.deleteBoardById(board)
-  } catch (error) {
-    throw new HttpException(
-      404,
-      'Board with id = :id not found or already deleted',
-      { id }
-    )
-  }
+  const board = await getRepository(Board)
+    .createQueryBuilder('board')
+    .where('board.user = :userId', { userId: payload.id })
+    .andWhere('board.id = :id', { id })
+    .getOneOrFail()
+    .catch(() => {
+      throw new HttpException(
+        404,
+        'Board with id = :id not found or already deleted',
+        { id }
+      )
+    })
+  await boardRepository.deleteBoardById(board)
 }
