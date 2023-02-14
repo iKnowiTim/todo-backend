@@ -83,7 +83,7 @@ listRouter.delete(
       }
 
       await listService.removeList(id, req.user)
-      res.send('list removed')
+      res.send()
     } catch (error) {
       next(error)
     }

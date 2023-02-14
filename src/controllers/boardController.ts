@@ -74,7 +74,7 @@ boardsRouter.delete(
       }
 
       await boardService.removeBoard(id, req.user)
-      res.send('Board removed')
+      res.send()
     } catch (error) {
       next(error)
     }
