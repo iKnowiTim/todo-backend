@@ -11,6 +11,7 @@ export interface Settings {
   dbPassword: string
   saltRounds: number
   secretKey: string
+  jwtExpire: string
 }
 
 export const settings: Settings = {
@@ -22,4 +23,5 @@ export const settings: Settings = {
   dbPassword: process.env.DB_PASSWORD ?? 'todo',
   saltRounds: parseInt(process.env.SALT_ROUNDS ?? '8'),
   secretKey: process.env.SECRET_KEY ?? 'SECRET_KEY_RANDOM',
+  jwtExpire: process.env.JWT_EXPIRES ?? '1h',
 }

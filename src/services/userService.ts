@@ -98,5 +98,7 @@ function generateAccessToken(id: number, username: string): string {
     username,
   }
 
-  return jwt.sign(payload, settings.secretKey, { expiresIn: '24h' })
+  return jwt.sign(payload, settings.secretKey, {
+    expiresIn: settings.jwtExpire,
+  })
 }
