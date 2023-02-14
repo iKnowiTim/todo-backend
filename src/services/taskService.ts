@@ -94,8 +94,17 @@ export async function updateTask(
   }
 }
 
-export async function removeTask(id: number): Promise<void> {
-  const task = await getRepository(Task).findOne(id)
+export async function removeTask(
+  id: number,
+  payload: PayloadDto
+): Promise<void> {
+  const task = await getRepository(Task)
+    .createQueryBuilder('task')
+    .leftJoin('task.list', 'list')
+    .leftJoin('list.board', 'board')
+    .where('task.id = :id', { id })
+    .andWhere('board.user = :userId', { userId: payload.id })
+    .getOne()
 
   if (!task) {
     throw new HttpException(

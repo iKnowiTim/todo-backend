@@ -60,10 +60,9 @@ taskRouter.delete(
     try {
       const id = parseInt(req.params.id)
 
-      await taskService.removeTask(id)
+      await taskService.removeTask(id, req.user)
       res.send('Task removed')
     } catch (error) {
-      logger.error(error)
       next(error)
     }
   }
