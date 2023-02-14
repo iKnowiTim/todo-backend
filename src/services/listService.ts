@@ -90,15 +90,19 @@ export async function updateList(
 
 export async function createList(
   boardId: number,
-  listDto: CreateListDto
+  listDto: CreateListDto,
+  payload: PayloadDto
 ): Promise<CreatedListDto> {
-  const board = await getRepository(Board).findOne(boardId)
-
-  if (!board) {
-    throw new HttpException(404, 'Board with id = :boardId not found', {
-      boardId,
+  const board = await getRepository(Board)
+    .createQueryBuilder('board')
+    .where('board.id = :boardId', { boardId })
+    .andWhere('board.user = :userId', { userId: payload.id })
+    .getOneOrFail()
+    .catch(() => {
+      throw new HttpException(404, 'Board with id = :boardId not found', {
+        boardId,
+      })
     })
-  }
 
   const list = new List({
     title: listDto.title,

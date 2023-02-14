@@ -63,7 +63,7 @@ listRouter.post(
 
       const listDto: CreateListDto = req.body
 
-      const list = await listService.createList(id, listDto)
+      const list = await listService.createList(id, listDto, req.user)
       res.send(list)
     } catch (error) {
       next(error)
