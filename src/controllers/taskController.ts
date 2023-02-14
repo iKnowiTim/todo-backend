@@ -82,10 +82,9 @@ taskRouter.patch(
 
       const taskDto = req.body
 
-      const updated = await taskService.updateTask(id, taskDto)
+      const updated = await taskService.updateTask(id, taskDto, req.user)
       res.send(updated)
     } catch (error) {
-      logger.error(error)
       next(error)
     }
   }

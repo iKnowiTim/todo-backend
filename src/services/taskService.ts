@@ -68,9 +68,16 @@ export async function createTask(
 
 export async function updateTask(
   id: number,
-  taskDto: UpdateTaskDto
+  taskDto: UpdateTaskDto,
+  payload: PayloadDto
 ): Promise<UpdatedTaskDto> {
-  const dbTask = await getRepository(Task).findOne(id)
+  const dbTask = await getRepository(Task)
+    .createQueryBuilder('task')
+    .leftJoin('task.list', 'list')
+    .leftJoin('list.board', 'board')
+    .where('task.id = :id', { id })
+    .andWhere('board.user = :userId', { userId: payload.id })
+    .getOne()
 
   if (!dbTask) {
     throw new HttpException(404, 'Task with id = :id not found', { id })
