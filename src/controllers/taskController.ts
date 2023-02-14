@@ -11,29 +11,25 @@ import * as taskService from '../services/taskService'
 
 export const taskRouter = Router()
 
-taskRouter.get('/lists/:id/tasks', async (req, res, next): Promise<void> => {
-  try {
-    const listId = parseInt(req.params.id)
+taskRouter.get(
+  '/lists/:id/tasks',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const listId = parseInt(req.params.id)
 
-    if (isNaN(listId)) {
-      throw new HttpException(400, 'bad request')
+      if (isNaN(listId)) {
+        throw new HttpException(400, 'bad request')
+      }
+
+      const task = await taskService.getTasks(listId, req.user)
+      res.send(task)
+    } catch (error) {
+      logger.error(error)
+      next(error)
     }
-
-    const list = await listRepository.getListById(listId)
-
-    if (!list) {
-      throw new HttpException(404, 'List with id = :listId not found', {
-        listId,
-      })
-    }
-
-    const task = await taskService.getTasks(listId)
-    res.send(task)
-  } catch (error) {
-    logger.error(error)
-    next(error)
   }
-})
+)
 
 taskRouter.post(
   '/lists/:id/tasks',

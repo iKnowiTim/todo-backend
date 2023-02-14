@@ -8,12 +8,16 @@ import {
   UpdatedTaskDto,
   UpdateTaskDto,
 } from '../dto/tasksDto'
+import { PayloadDto } from '../dto/userDto'
 import { List } from '../entities/list'
 import { Task } from '../entities/task'
 import * as taskRepository from '../repositories/taskRepository'
 
-export async function getTasks(listId: number): Promise<GetTasksDto[]> {
-  const tasks = await taskRepository.getTaskById(listId)
+export async function getTasks(
+  listId: number,
+  payload: PayloadDto
+): Promise<GetTasksDto[]> {
+  const tasks = await taskRepository.getTaskById(listId, payload.id)
 
   return tasks.map((task) => ({
     id: task.id,
