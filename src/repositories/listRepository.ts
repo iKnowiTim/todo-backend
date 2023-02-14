@@ -18,11 +18,16 @@ export async function getLists(
     .getRawMany()) as ListWithCount[]
 }
 
-export async function getListById(id: number): Promise<List | undefined> {
+export async function getListById(
+  id: number,
+  userId: number
+): Promise<List | undefined> {
   return await getRepository(List)
     .createQueryBuilder('list')
+    .leftJoin('list.board', 'board')
     .leftJoinAndSelect('list.tasks', 'tasks')
     .where(`list.id = :id`, { id })
+    .andWhere('board.user = :userId', { userId })
     .getOne()
 }
 

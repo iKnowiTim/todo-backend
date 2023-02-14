@@ -30,20 +30,24 @@ listRouter.get(
   }
 )
 
-listRouter.get('/lists/:id', async (req, res, next): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
+listRouter.get(
+  '/lists/:id',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id)
 
-    if (isNaN(id)) {
-      throw new HttpException(400, 'Bad request')
+      if (isNaN(id)) {
+        throw new HttpException(400, 'Bad request')
+      }
+
+      const list = await listService.getList(id, req.user)
+      res.send(list)
+    } catch (error) {
+      next(error)
     }
-
-    const list = await listService.getList(id)
-    res.send(list)
-  } catch (error) {
-    next(error)
   }
-})
+)
 
 listRouter.post(
   '/boards/:id/lists',
