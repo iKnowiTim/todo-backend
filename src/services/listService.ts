@@ -121,16 +121,23 @@ export async function createList(
   }
 }
 
-export async function removeList(id: number): Promise<void> {
-  const list = await getRepository(List).findOne(id)
-
-  if (!list) {
-    throw new HttpException(
-      404,
-      'List with id = :id not found or already deleted',
-      { id }
-    )
-  }
+export async function removeList(
+  id: number,
+  payload: PayloadDto
+): Promise<void> {
+  const list = await getRepository(List)
+    .createQueryBuilder('list')
+    .leftJoin('list.board', 'board')
+    .where('list.id = :id', { id })
+    .andWhere('board.user = :userId', { userId: payload.id })
+    .getOneOrFail()
+    .catch(() => {
+      throw new HttpException(
+        404,
+        'List with id = :id not found or already deleted',
+        { id }
+      )
+    })
 
   await listRepository.removeListById(list)
 }

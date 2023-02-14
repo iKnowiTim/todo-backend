@@ -82,7 +82,7 @@ listRouter.delete(
         throw new HttpException(400, 'Bad request')
       }
 
-      await listService.removeList(id)
+      await listService.removeList(id, req.user)
       res.send('list removed')
     } catch (error) {
       next(error)
