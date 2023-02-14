@@ -58,7 +58,6 @@ export async function me(payloadDto: PayloadDto): Promise<UserDto> {
   const user = await userRepository.getUserById(payloadDto.id)
 
   if (!user) {
-    logger.error(user)
     throw new HttpException(500, 'Server error', {
       id: payloadDto.id,
     })
