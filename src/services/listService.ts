@@ -64,9 +64,10 @@ export async function getList(
 
 export async function updateList(
   id: number,
-  listDto: UpdateListDto
+  listDto: UpdateListDto,
+  payload: PayloadDto
 ): Promise<UpdatedListDto> {
-  const dbList = await listRepository.getListById(id, 2)
+  const dbList = await listRepository.getListById(id, payload.id)
 
   if (!dbList) {
     throw new HttpException(404, 'List with id = :id not found', { id })

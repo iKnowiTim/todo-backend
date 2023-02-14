@@ -104,7 +104,7 @@ listRouter.patch(
 
       const listDto: CreateListDto = req.body
 
-      const updated = await listService.updateList(id, listDto)
+      const updated = await listService.updateList(id, listDto, req.user)
       res.send(updated)
     } catch (error) {
       next(error)
