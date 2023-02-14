@@ -1,10 +1,11 @@
-import { createQueryBuilder, getRepository } from 'typeorm'
-import { CreateListDto, UpdateListDto } from '../dto/listsDto'
-import { Board } from '../entities/board'
+import { getRepository } from 'typeorm'
 import { List } from '../entities/list'
 
 type ListWithCount = List & { tasksCount: number }
-export async function getLists(boardId: number): Promise<ListWithCount[]> {
+export async function getLists(
+  boardId: number,
+  userId: number
+): Promise<ListWithCount[]> {
   return (await getRepository(List)
     .createQueryBuilder('list')
     .select('list.*')
@@ -12,6 +13,7 @@ export async function getLists(boardId: number): Promise<ListWithCount[]> {
     .leftJoin('list.tasks', 'tasks')
     .leftJoin('list.board', 'board')
     .where('board.id = :boardId', { boardId })
+    .andWhere('board.user = :userId', { userId })
     .groupBy('list.id')
     .getRawMany()) as ListWithCount[]
 }

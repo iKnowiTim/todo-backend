@@ -12,9 +12,13 @@ import * as boardRepository from '../repositories/boardRepository'
 import { getRepository } from 'typeorm'
 import { List } from '../entities/list'
 import { Board } from '../entities/board'
+import { PayloadDto } from '../dto/userDto'
 
-export async function getLists(boardId: number): Promise<GetListsDto[]> {
-  const lists = await listRepository.getLists(boardId)
+export async function getLists(
+  boardId: number,
+  payload: PayloadDto
+): Promise<GetListsDto[]> {
+  const lists = await listRepository.getLists(boardId, payload.id)
 
   const listsDto: GetListsDto[] = lists.map((list) => ({
     id: list.id,

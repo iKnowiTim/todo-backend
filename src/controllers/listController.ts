@@ -11,27 +11,24 @@ import * as listService from '../services/listService'
 
 export const listRouter = Router()
 
-listRouter.get('/boards/:id/lists', async (req, res, next): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
+listRouter.get(
+  '/boards/:id/lists',
+  authMiddleware,
+  async (req, res, next): Promise<void> => {
+    try {
+      const boardId = parseInt(req.params.id)
 
-    if (isNaN(id)) {
-      throw new HttpException(400, 'Bad request')
+      if (isNaN(boardId)) {
+        throw new HttpException(400, 'Bad request')
+      }
+
+      const lists = await listService.getLists(boardId, req.user)
+      res.send(lists)
+    } catch (error) {
+      next(error)
     }
-
-    const board = await BoardRepository.getBoardById(id)
-
-    if (!board) {
-      throw new HttpException(404, `Board is Not Found with id = :id`, { id })
-    }
-
-    const lists = await listService.getLists(id)
-    res.send(lists)
-  } catch (error) {
-    logger.error(error)
-    next(error)
   }
-})
+)
 
 listRouter.get('/lists/:id', async (req, res, next): Promise<void> => {
   try {
@@ -44,7 +41,6 @@ listRouter.get('/lists/:id', async (req, res, next): Promise<void> => {
     const list = await listService.getList(id)
     res.send(list)
   } catch (error) {
-    logger.error(error)
     next(error)
   }
 })
@@ -66,7 +62,6 @@ listRouter.post(
       const list = await listService.createList(id, listDto)
       res.send(list)
     } catch (error) {
-      logger.error(error)
       next(error)
     }
   }
@@ -86,7 +81,6 @@ listRouter.delete(
       await listService.removeList(id)
       res.send('list removed')
     } catch (error) {
-      logger.error(error)
       next(error)
     }
   }
@@ -109,7 +103,6 @@ listRouter.patch(
       const updated = await listService.updateList(id, listDto)
       res.send(updated)
     } catch (error) {
-      logger.error(error)
       next(error)
     }
   }
